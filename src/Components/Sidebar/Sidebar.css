@@ -1,0 +1,68 @@
+.sidebar{
+    background-color: #206f7e;
+    width: 20%;
+    padding-top: 40px;
+    position: fixed; 
+    top: 50px;
+    bottom: 0; 
+    left: 0; /* Align the sidebar to the left side of the viewport */
+   
+}
+.sidebar ul{
+ display: flex;
+ flex-direction: column;
+ padding: 0;
+ gap: 3px;
+}
+.sidebar ul a{
+    text-decoration: none;
+    color: white;
+}
+.sidebar ul a li{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    /* padding: 0 15px; */
+    padding-left: 15px ;
+    gap: 10px;
+    width: 87.2%;
+    position: relative;
+    /* background-color: blue; */
+}
+.sidebar ul a li p{
+    font-family: 'Trocchi', serif;
+    font-size: 14px;
+    text-transform: capitalize;
+}
+.sidebar ul a li.active{
+  border-top-left-radius:50px;
+  border-bottom-left-radius: 50px;
+  background-color: white;
+  color: #206f7e;
+}
+.sidebar ul a li.active::before{
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-bottom-right-radius: 50px;
+    background-color: transparent;
+    box-shadow: 5px 5px 0 5px white;
+    top: -15px;
+    right: 1px;
+}
+.sidebar ul a li.active::after{
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-top-right-radius: 50px;
+    background-color: transparent;
+    box-shadow: 5px -5px 0 5px white;
+    bottom: -15px;
+    right: 1px;
+}
+.sidebar ul a li.active p{
+    font-weight: 900;
+}
