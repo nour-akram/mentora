@@ -1,0 +1,62 @@
+.popup_material{
+    background-color: #206F7E;
+    color: white;
+    position: absolute;
+    top: 15%;
+    left: 10%;
+    z-index: 99999999999999;
+    width: 70%;
+    padding: 10px;
+    border-radius: 15px;
+}
+.popup_material .header_material{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "trochi";
+}
+.popup_material .header_material img{
+    cursor: pointer;
+}
+.popup_material .feilds_material{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.popup_material .feilds_material .description {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.popup_material .feilds_material .description input{
+    background: transparent;
+    outline: none;
+    border: 1px solid white;
+    border-radius: 8px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+    cursor: pointer;
+    color: white;
+}
+.popup_material .feilds_material .upload{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+.popup_material .feilds_material .upload button{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    gap: 10px;
+    padding: 0 5px;
+    font-family: "trochi";
+    color:#206F7E;
+    font-size: 15px;
+    font-weight: 700;
+    background-color: white;
+}

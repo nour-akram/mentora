@@ -1,0 +1,400 @@
+.profile-container{
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(32, 111, 126, 0.5), rgba(32, 111, 126, 1));
+    display: flex;
+    /* justify-content: center; */
+}
+.profileAdmin-content{
+  /* background-color:white; */
+  width: 98%;
+  border-radius: 20px;
+  margin-top:4% ;
+  display: flex;
+  justify-content: center;
+ 
+}
+.profileAdmin-content .userData{
+  width: 100%;
+  background-color: white;
+  display: flex;
+  margin: 1% 0;
+  margin-top: 1%;
+  padding: 2%;
+  border-radius: 20px;
+  /* justify-content: space-between; */
+  align-items: flex-start;
+  margin-left: 20.5%;
+  gap: 1%;
+}
+.profileAdmin-content .userData .leftSide{
+  background-color: white;
+  width: 40%;
+  box-shadow: 1px 1px 8px #39818f, -1px -1px 8px #39818f;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Trocchi', serif;
+  color: #206F7E;
+  padding: 10px;
+}
+.profileAdmin-content .userData .leftSide .userImage{
+    width: 35%;
+}
+.profileAdmin-content .userData .leftSide .userName,.profileAdmin-content .userData .leftSide .bio{
+    text-transform: capitalize;
+    margin: 5px;
+}
+.profileAdmin-content .userData .leftSide .followers-following{
+    display: flex;
+    width: 90%;
+    justify-content: space-around;
+    align-items: center;
+    margin: 14px 0;
+}
+.profileAdmin-content .userData .leftSide .followers-following div{
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   cursor: pointer;
+}
+.profileAdmin-content .userData .leftSide .followers-following div p{
+    margin: 0;
+}
+.profileAdmin-content .userData .leftSide .buttons{
+    display: flex;
+    align-items: center;
+    width: 95%;
+    justify-content: space-around;
+    margin: 3px 0;
+}
+.profileAdmin-content .userData .leftSide .editProfile{
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+.profileAdmin-content .userData .leftSide .editProfile button{
+    background-color: #206F7E;
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    
+}
+.profileAdmin-content .userData .leftSide .editProfile button p,.profileAdmin-content .userData .leftSide .Apply-as-mentor button p{
+    color: white;
+    font-family: 'Trocchi', serif;
+    font-size: 14px;
+}
+.profileAdmin-content .userData .leftSide .Apply-as-mentor{
+    display: flex;
+    justify-content: center;
+    width: 45%;
+    /* background-color: aqua; */
+}
+.profileAdmin-content .userData .leftSide .Apply-as-mentor button{
+    background-color: #206F7E;
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.line1{
+    width: 100%;
+    height: 2px;
+    background-color: #206F7E;
+    opacity: 0.6;
+    margin: 4% 0 10% 0;
+}
+.line{
+    width: 100%;
+    height: 2px;
+    background-color: #206F7E;
+    opacity: 0.6;
+    margin: 10px 0;
+}
+.profileAdmin-content .userData .info{
+    background-color: white;
+    width: 60%;
+    box-shadow: 1px 1px 8px #39818f, -1px -1px 8px #39818f;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-family: 'Trocchi', serif;
+    color: #206F7E;
+    padding: 20px;
+}
+.profileAdmin-content .userData .info h2{
+    text-transform: capitalize;
+    font-weight: 600;
+    margin: 0;
+}
+
+.info-div{
+    display: flex;
+    width: 98%;
+
+}
+.userData{
+    display: flex;
+flex-direction: column;
+}
+
+.profileAdmin-content .userData .info .img{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.profileAdmin-content .userData .info .Data{
+    /* background-color: aqua; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+.profileAdmin-content .userData .info .Data .item{
+     display: flex;
+     align-items: center;
+     margin: 0;
+     justify-content: space-between;
+     /* background-color: aqua; */
+}
+.profileAdmin-content .userData .info .Data .item .nameIcon{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.profileAdmin-content .userData .info .Languages,.profileAdmin-content .userData .info .Interests{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    margin: 0;
+}
+.profileAdmin-content .userData .info .listofLanguages,.profileAdmin-content .userData .info .listofInterests{
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: space-between;
+    margin: 0;
+    flex-wrap: wrap;
+}
+
+
+
+
+
+.profileSystem-container {
+    width: 100%;
+    /* max-width: 800px; */
+}
+
+.profileSystem-wrapper {
+    margin-bottom: 10px;
+}
+
+.profileSystem-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+    color: #206F7E;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    margin: 10px 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+
+.profileSystem-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.profileSystem-container h2 {
+    display: flex;
+    margin: 40px 20px 40px 20px;
+    color: #206F7E;
+}
+
+.profileSystem-left {
+    display: flex;
+    align-items: center;
+}
+
+.profileSystem-left img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.profileSystem-info h4 {
+    display: flex;
+    margin-left: 10px;
+}
+
+.profileSystem-info p {
+    display: flex;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.profileSystem-right {
+    display: flex;
+}
+
+
+.details-popup-content p a{
+    color:#206F7E;
+    text-decoration: none;
+}
+.profileSystem-right button {
+    margin-left: 10px;
+    font-family: 'Trocchi', serif;
+        padding: 10px 20px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+}
+
+.accept{
+    background-color: #206F7E;
+}
+
+.reject {
+    background-color: rgb(207, 0, 0);
+}
+
+.reject:hover {
+    background-color: rgb(183, 0, 0);
+}
+
+.accept-form {
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.accept-form h3 {
+    margin-top: 0;
+}
+
+
+.profileSystem-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s;   
+
+}
+
+.profileSystem-popup-content {
+    background-color: #206F7E;
+    color: #ffffff;
+    /* padding: 20px 40px; */
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    border-radius:20px  ;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s;
+}
+
+.ppp{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-radius: 0px 0px 20px 20px;
+}
+.profileSystem-popup-content h3 {
+    margin-top: 0;
+    font-size: 2em;
+    color: white;
+}
+.xx{
+    border-radius: 30px;
+}
+.profileSystem-popup-content p {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-size: 1.1em;
+    margin: 10px 0;
+    color: #206F7E;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    height: 30%;
+}
+
+
+
+
+.profileSystem-success-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 1000;
+}
+.profileSystem-success-icon{
+    color: #ffffff;
+}
+
+.profileSystem-success-popup-content {
+    position: relative;
+    text-align: center;
+}
+
+.profileSystem-success-popup-content h3 {
+    margin-top: 0;
+    border-radius: 20px;
+}
+
+.profileSystem-close {
+    display: flex;
+    justify-content: right;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    margin-right: 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #206F7E;
+}

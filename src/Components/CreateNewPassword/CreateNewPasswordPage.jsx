@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useLocation} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "./CreateNewPasswordPage.css";
 import image from "../../assets/createnewpass.png";
+import axiosInstance from '../../api/axiosConfig';
 
 const CreateNewPasswordPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ const CreateNewPasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const location = useLocation();
+  const emailFromForgetPassword2 = location.state?.emailFromForgetPassword || "";
+  // console.log(emailFromForgetPassword2)
   const [formErrors, setFormErrors] = useState({
     newPassword: "",
     confirmPassword: "",
@@ -37,7 +41,7 @@ const CreateNewPasswordPage = () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async(e) => {
     e.preventDefault();
     const errors = {};
     if (!newPassword.trim()) {
@@ -48,13 +52,32 @@ const CreateNewPasswordPage = () => {
     } else if (newPassword !== confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-
     setFormErrors(errors);
 
+    const savenewPass = async () => {
+      try {
+        const response = await axiosInstance.post("/user/setNewPassword", {
+          newPassword: newPassword,
+          email:emailFromForgetPassword2,
+        });
+        if (response.data.success) {
+          navigate("/loginpage");
+        } else {
+          console.error("Incorrect OTP");
+        }
+      } catch (error) {
+        console.error("Error verifying OTP:", error);
+      }
+    };
+
     if (Object.keys(errors).length === 0) {
+      savenewPass();
       console.log("Creating new password");
-      navigate("/loginpage");
+      
     }
+
+
+   
   };
 
   return (
@@ -110,7 +133,7 @@ const CreateNewPasswordPage = () => {
             <button
               type="submit"
               className="buttonStyle"
-              // onClick={handleFormSubmit}
+              onClick={handleFormSubmit}
             >
               Finish
             </button>

@@ -1,0 +1,235 @@
+.popup_Training{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-family: "trochi";
+    background-color: #206f7e;
+    z-index: 9999999999999;
+    position: absolute;
+    bottom: 25%;
+    left: 10%;
+    width: 70%;
+    padding: 5px 10px ;
+    border-radius: 15px;
+}
+.popup_Training .header_training{
+     width: 100%;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+}
+.popup_Training .header_training img{
+    cursor: pointer;
+}
+.feilds_training{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+.feilds_training .firstfeilds,.feilds_training .secondfeilds,.feilds_training .thirdfeilds{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.feilds_training .firstfeilds .left,.feilds_training .firstfeilds .right,.feilds_training .secondfeilds .left,.feilds_training .secondfeilds .right ,.feilds_training .thirdfeilds .left,.feilds_training .thirdfeilds .right{
+    display: flex;
+    flex-direction: column;
+    width: 47%;
+}
+.feilds_training .firstfeilds .left input,.feilds_training .firstfeilds .right input ,.feilds_training .secondfeilds .left input,.feilds_training .secondfeilds .right input, .feilds_training .thirdfeilds .left input,.feilds_training .thirdfeilds .right input {
+   background-color: transparent;
+   outline: none;
+   border: 1px solid white;
+   border-radius: 8px;
+   padding: 8px;
+   color: white;
+}
+
+  /* input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); 
+  } */
+  .duration-inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .duration-inputs input {
+    color: white;
+    width: 35%; 
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 8px;
+  }
+  
+  .duration-inputs select {
+    width: 50%; 
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 8px;
+    background-color: transparent; 
+    color: white; 
+    transition: background-color 0.3s ease, color 0.3s ease; 
+    outline: none;
+  }
+  
+  .duration-inputs select:hover {
+    background-color: white; 
+    color: #206f7e; 
+  }
+    input::placeholder {
+    color: white;
+    opacity: 1;
+  }
+  .imagefeild{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .imagefeild button{
+    background: transparent;
+    outline: none;
+    border: 1px solid white;
+    border-radius: 8px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 2px;
+    cursor: pointer;
+  }
+  .feilds_training .description{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .feilds_training label{
+    text-align: start;
+  }
+  .feilds_training .description input{
+    background: transparent;
+    outline: none;
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 8px;
+    color: white;
+  }
+
+  .levelField {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .radioGroup {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .radioGroup input[type="radio"] {
+    display: none;
+  }
+  
+  .radioGroup label {
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .radioGroup label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid white;
+    border-radius: 50%;
+    background-color: transparent;
+  }
+  
+  .radioGroup input[type="radio"]:checked + label:before {
+    background-color: #3DA982;
+    border-color: #3DA982;
+  }
+  
+  .radioGroup input[type="radio"]:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 3.5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: white;
+  }
+
+  .buttonTraining{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .buttonTraining button{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    gap: 10px;
+    padding: 0 5px;
+    background-color: white;
+  }
+  .buttonTraining button p{
+    color: #206f7e;
+    font-family: "trochi";
+    font-size: 15px;
+   
+  }
+
+
+  .secondfeilds .left select{
+    background-color: transparent;
+    color: white;
+    outline:none ;
+    border: 1px white solid;
+    border-radius: 8px;
+    padding: 8px;
+  } 
+
+  .secondfeilds .left select:hover {
+    background-color: white; 
+    color: #206f7e; 
+  }
+
+  .feilds_training .right .selection,
+.feilds_training .right input[type="text"] {
+  background-color: transparent;
+  color: white; /* Text color */
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  margin-top: 5px;
+  outline: none;
+}
+
+.feilds_training .right select:hover,
+.feilds_training .right input[type="text"]:hover {
+  background-color: #206f7e;
+  color: white;
+}
+
+.feilds_training .right select option {
+  background-color: transparent;
+  color: white; /* Text color */
+}
+.containerfeild{
+    display: flex;
+}

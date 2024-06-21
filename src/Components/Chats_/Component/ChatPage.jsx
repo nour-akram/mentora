@@ -1,71 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faSearch,
-} from "@fortawesome/free-solid-svg-icons";
-// import axios from "axios";
+import { faCheck, faSearch } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "universal-cookie";
 import "./ChatPage.css";
-import ChatTopbar from './ChatTopbar'
+import ChatTopbar from "./ChatTopbar";
+import axiosInstance from "../../../api/axiosConfig";
+
 const ChatPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatsData, setChatsData] = useState([]);
+  const [chatDetails, setChatDetails] = useState(null);
+  const [userName, setUserName] = useState("");
 
-  
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
 
-  // useEffect(() => {
-  //   const fetchChatsData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "http://localhost:8000/api/chat/getChats",
-  //         {
-  //           method: "get",
-  //         }
-  //       ).then((response) => {
-  //         //  setChatsData(response.data);
-  //         console.log(response);
-  //       });
-  //       if (response) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
+  useEffect(() => {
+    const fetchChatsData = async () => {
+      try {
+        const response = await axiosInstance.get("/chat/getChats", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  //       setChatsData(data);
-  //     } catch (error) {
-  //       console.error("Error fetching chat data:", error);
-  //     }
-  //   };
+        if (Array.isArray(response.data.data)) {
+          setChatsData(response.data.data);
+        } else {
+          console.error("Fetched data is not an array:", response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching chat data:", error);
+      }
+    };
 
-  //   fetchChatsData();
-  // }, []);
+    fetchChatsData();
+  }, [token]);
 
-  const handleChatClick = (chatId) => {
-    setSelectedChat(chatId === selectedChat ? null : chatId);
+  const fetchChatData = async (chatId) => {
+    try {
+      const response = await axiosInstance.get(`/chat/findChat/${chatId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = response.data;
+      const firstName = result.data.users[1].firstName;
+      const lastName = result.data.users[1].lastName;
+      const userName = `${firstName} ${lastName}`;
+      
+      setUserName(userName);
+      setSelectedChat(result.data._id);
+    } catch (error) {
+      console.error("Error fetching chat content:", error);
+    }
   };
 
-  const filteredChats = chatsData.filter(
-    (chat) =>
-      chat.lastMessage.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      chat.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleChatClick = async (chatId) => {
+    setSelectedChat(chatId === selectedChat ? null : chatId);
+    if (chatId !== selectedChat) {
+      await fetchChatData(chatId);
+    } else {
+      setChatDetails(null);
+    }
+  };
 
-  //  const chatsData2 = [
-  //    {
-  //      id: 1,
-  //      name: "Nour Shazly",
-  //      lastMessage: "Hello there!",
-  //      time: "12:30 PM",
-  //      read: true,
-  //    },
-  //    {
-  //      id: 2,
-  //      name: "Nour Shazly",
-  //      lastMessage:
-  //        "Hello there Hello thereHello thereHello thereHello thereHello thereHello thereHello thereHello thereHello thereHello thereHello there!",
-  //      time: "12:30 PM",
-  //      read: true,
-  //    },]
+  const filteredChats = chatsData.filter((chat) => {
+    return (
+      (chat.last_message?.message
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+        chat.user?.some((user) =>
+          `${user.firstName} ${user.lastName}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )) ??
+      false
+    );
+  });
+
   return (
     <div className="all-chat-container">
       <div className="chat-Container">
@@ -85,44 +100,57 @@ const ChatPage = () => {
             </div>
           </div>
           <div className="chats-list">
-            {filteredChats.map((chat) => (
-              <div
-                key={chat.id}
-                className={`chat-item ${
-                  selectedChat === chat.id ? "selected" : ""
-                }`}
-                onClick={() => handleChatClick(chat.id)}
-              >
-                <img
-                  src={chat.profilePic} 
-                  alt={chat.name}
-                />
-                <div className="info">
-                  <div>
-                    <span>
-                      <h3>{chat.name}</h3>
-                    </span>
-                    <span>
-                      <p>{chat.time}</p>
+            {filteredChats.length > 0 ? (
+              filteredChats.map((chat) => (
+                <div
+                  key={chat._id}
+                  className={`chat-item ${
+                    selectedChat === chat._id ? "selected" : ""
+                  }`}
+                  onClick={() => handleChatClick(chat._id)}
+                >
+                  <div className="info">
+                    <div>
+                      <span>
+                        <h3>
+                          {chat.user?.map((user, index) => (
+                            <span key={user._id}>
+                              {user.firstName} {user.lastName}
+                              {index < (chat.user?.length ?? 0) - 1 && ", "}
+                            </span>
+                          ))}
+                        </h3>
+                      </span>
+                      <span>
+                        <p>
+                          {chat.last_message &&
+                            new Date(
+                              chat.last_message.createdAt
+                            ).toLocaleString()}
+                        </p>
+                      </span>
+                    </div>
+                    <span className="last-message">
+                      <span className="last-message-text">
+                        {chat.last_message?.message}
+                      </span>
+                      <span>
+                        {chat.last_message?.isRead && (
+                          <FontAwesomeIcon icon={faCheck} />
+                        )}
+                      </span>
                     </span>
                   </div>
-                  <span className="last-message">
-                    <span className="last-message-text">
-                      {chat.lastMessage}
-                    </span>
-                    <span>
-                      {" "}
-                      {chat.read && <FontAwesomeIcon icon={faCheck} />}
-                    </span>
-                  </span>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No chats found.</p>
+            )}
           </div>
         </div>
         <div className="chat-page-container">
           <div className="chat-page">
-              <ChatTopbar selectedChat={ selectedChat} />
+            <ChatTopbar selectedChat={selectedChat} chatDetails={chatDetails} userName={userName} />
           </div>
         </div>
       </div>

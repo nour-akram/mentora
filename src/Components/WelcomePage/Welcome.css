@@ -63,12 +63,8 @@
     cursor: pointer;
 }
 .WelcomePageContainer .WelcomePageContent .firstSection .rightSection{
-    /* background-color: blue; */
-    width: 50%;
-    height: 100%;
-    position: relative;
-    align-items: center;
-    /* padding-top: 20px; */
+    display: flex;
+    justify-content: center;
 }
 .WelcomePageContainer .WelcomePageContent .firstSection .rightSection .verticalImages{
     display: flex;
@@ -81,18 +77,18 @@
 .WelcomePageContainer .WelcomePageContent .firstSection .rightSection .verticalImages img{
  width: 22%;
 }
-.WelcomePageContainer .WelcomePageContent .firstSection .rightSection .horizentalImages{
+.WelcomePageContainer .WelcomePageContent .firstSection .rightSection .horizentalImages {
     position: absolute;
     top: 36%;
-    left:26%;
+    left: 40%;
     display: flex;
     flex-direction: row;
-    gap: 40%;
-    justify-content:center;
+    gap: 90%;
+    justify-content: center;
     align-items: center;
 }
 .WelcomePageContainer .WelcomePageContent .firstSection .rightSection .horizentalImages img{
-    width:40%;
+    width:100%;
 }
 .WelcomePageContainer .WelcomePageContent .secondSection{
  display: flex;
@@ -229,3 +225,7 @@
 .WelcomePageContainer .WelcomePageContent .fourthSection .nestedSection .card:hover {
   transform:scale(1.1);
 }
+
+
+
+

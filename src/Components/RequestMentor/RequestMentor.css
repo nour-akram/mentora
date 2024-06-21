@@ -1,0 +1,39 @@
+body{
+    background-color: #206F7E;
+}
+.RequestMentor-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #206F7E;
+}
+
+.RequestMentor-content-container {
+    background-color: #ffffff;
+    justify-content: end;
+    color: #206F7E;
+    font-family: 'Trocchi', serif;
+    box-shadow: 3px 3px 10px 10px rgba(0.1, 0.1, 0.1, .1);
+    width: 77%;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* padding-top: 75px; */
+    border-radius: 25px;
+    margin-top: 5%;
+    margin-left: 20%;
+}
+
+
+
+.RequestMentor-main-content {
+flex-direction: row-reverse;
+display: flex;
+flex-grow: 1;
+bottom: 0;
+width: 100%;
+}
+

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./ForgetPasswordPage.css";
 import image from "../../assets/forgetPass.png";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../../api/axiosConfig';
 
 const ForgetPasswordPage = () => {
   const navigate = useNavigate();
@@ -37,14 +37,14 @@ const ForgetPasswordPage = () => {
 
     if (Object.keys(errors).length === 0) {
       try {
-        const response = await axios.post(
-          "http://localhost:4000/api/user/resetPassword",
+        const response = await axiosInstance.post(
+          "/user/resetPassword",
           { email }
         );
-  
+        
         console.log("Response from server:", response); // Check the response from the server
   
-        if (response.statusText==="OK") {
+        if (response.status===200) {
           console.log("OTP sent successfully");
           navigate("/verification", { state: { email } });
         } else {

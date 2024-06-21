@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./VerificationPage.css";
 import image from "../../assets/Verification.png";
-import axios from "axios";
-
+import axiosInstance from '../../api/axiosConfig';
 const VerificationPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,32 +52,42 @@ const VerificationPage = () => {
 
       if (index === 5 && value.length === 1) {
         setIsLoading(true);
-        const otpCode = verificationCode.join("");
-       
+        setTimeout(() => {
+          const inputField = document.getElementById(`code-input-${index}`);
+          if (inputField) {
+            inputField.focus();
+          }
+        }, 0);
+        const otpCode = newCode.join("");
+        console.log(otpCode);
+        // const verifyOtp ={
+        //   inputOtp: otpCode,
+        // }
+        verifyAndProceed(otpCode);
       }
     }
   };
 
-  // const verifyAndProceed = async (otpCode) => {
-  //   try {
-  //     const response = await axios.post("http://localhost:4000/api/verifyPasswordResetOTP", {
-  //       email: emailFromForgetPassword,
-  //       otp: otpCode,
+  const verifyAndProceed = async (otpCode) => {
+    try {
+      const response = await axiosInstance.post("/user/verifyPasswordResetOTP", {
+        email: emailFromForgetPassword,
+        inputOtp: otpCode,
         
-  //     });
+      });
+      if (response.data.success) {
+        navigate("/createNewPass", { state: { emailFromForgetPassword } });
+      }
+      else {
+        console.error("Incorrect OTP");
+      }
 
-  //     if (response.data.success) {
-  //       navigate("/createNewPass");
-  //     } else {
-  //       console.error("Incorrect OTP");
-  //     }
-
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     console.error("Error verifying OTP:", error);
-  //   }
-  // };
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error verifying OTP:", error);
+    }
+  };
 
   const handleResendCode = () => {
     setIsResendButtonDisabled(true);
@@ -89,7 +98,7 @@ const VerificationPage = () => {
 
   const resendOTP = async (email) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/resend-otp", { email });
+      const response = await axiosInstance.post("/resend-otp", { email });
 
       if (response.data.success) {
         setCounter(59);

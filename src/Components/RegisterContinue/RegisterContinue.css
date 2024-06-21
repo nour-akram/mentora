@@ -52,10 +52,12 @@
     display: flex;
     flex-direction: column;
     gap:32px;
+    width: 100%;
    }
    .contentReg form .fieldsSection .input-container{
     position: relative;
     height: 30px;
+   
     display: flex;
    }
    .contentReg form .fieldsSection .input-container .label {

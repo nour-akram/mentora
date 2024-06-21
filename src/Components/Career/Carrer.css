@@ -1,0 +1,53 @@
+body {
+    background-color: #206F7E;
+}
+
+.Schedule-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #206F7E;
+}
+
+.Schedule-content-container {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+}
+
+
+
+.Schedule-main-content {
+    flex-direction: row-reverse;
+    display: flex;
+    flex-grow: 1;
+    bottom: 0;
+
+}
+
+
+
+
+
+
+
+.list_career{
+    display: flex;
+    width: 100%;
+    background: white;
+    color: #206F7E;
+    justify-content: space-around;
+    box-shadow: 5px 5px 50x rgba(0, 0, 0, 0.25) -5px -5px 50x rgba(0, 0, 0, 0.25);
+}
+.list_career h3{
+    border: 1px solid #206F7E;
+    padding: 15px 10%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.list_career h3.selected {
+    background-color: #206F7E;
+    color: white;
+  }
+  .section-content{
+    width: 100%;
+  }

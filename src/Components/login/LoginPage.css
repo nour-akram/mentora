@@ -53,6 +53,7 @@
 
 .passwordInputContainer {
     position: relative;
+    width: 100%;
 }
 
 .eyeIcon {
@@ -88,6 +89,7 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+    width: 100%;
 }
 .stroke{
     padding: 10px;

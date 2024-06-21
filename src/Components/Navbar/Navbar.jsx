@@ -36,12 +36,6 @@ const Navbar = () => {
         </Link>
        </div>
        <div className="nav-item">
-        <Link to="/favorites">
-        <img src={favorite} alt="not found" />
-          <span>Favorites</span>
-        </Link>
-       </div>
-       <div className="nav-item">
         <Link to="/chat">
         <img src={chat} alt="not found" />
           <span>Chats</span>

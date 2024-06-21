@@ -1,39 +1,35 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPaperclip,
-  faPaperPlane,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import "./CommunityPageBody.css";
-import { useDispatch,useSelector } from "react-redux";
-import { addQuestion ,addAnswer} from "../../../redux/Community/communityActions";
-import download from "../../../assets/download.png"
-import avatar from"../../../assets/Default_avatar.png"
-import menu from "../../../assets/menuQuestion.png"
-import answer from "../../../assets/answer.png"
-const CommunityPageBody = () => {
-  const dispatch = useDispatch();
-  const questions = useSelector((state) => state.community.questions);
+import avatar from "../../../assets/Default_avatar.png";
+import menu from "../../../assets/menuQuestion.png";
+import answer from "../../../assets/answer.png";
+import Cookies from "universal-cookie";
+import axiosInstance from '../../../api/axiosConfig';
+import defaultAvatar from "../../../assets/Default_avatar.png";
+import loved from "../../../assets/likeComment.png"
+const CommunityPageBody = ({ selectedCommunity }) => {
   const [inputValue, setInputValue] = useState("");
-  const [isAttachmentOpen, setIsAttachmentOpen] = useState(false);
   const [filePreview, setFilePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const [messages, setMessages] = useState([]);
   const [replyInput, setReplyInput] = useState("");
-  const [replies, setReplies] = useState([]);
-  const replyInputRef = useRef(null);
+  const [replyError, setReplyError] = useState(""); // New state for reply error message
   const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [isPopupMenuOpen, setIsPopupMenuOpen] = useState(false);
   const popupMenuRef = useRef(null);
- 
-  
+  const [errorMessage, setErrorMessage] = useState("");
+  const [AllQuestions, setAllQuestions] = useState([]);
+  const [showAnswerMap, setShowAnswerMap] = useState({});
+  const [answers, setAnswers] = useState({});
+  const [editingQuestionId, setEditingQuestionId] = useState(null);
+
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        popupMenuRef.current &&
-        !popupMenuRef.current.contains(event.target)
-      ) {
+      if (popupMenuRef.current && !popupMenuRef.current.contains(event.target)) {
         handlePopupMenuClose();
       }
     };
@@ -47,15 +43,45 @@ const CommunityPageBody = () => {
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
+    setErrorMessage("");
+  };
+
+  const handleReplyInputChange = (e) => {
+    setReplyInput(e.target.value);
+    setReplyError(""); // Reset the reply error message
+  };
+
+  const handlePopupMenuClose = () => {
+    setSelectedMessageId(null);
+    setIsPopupMenuOpen(false);
+  };
+
+  const handleSendEdit = () => {
+    if (!editingQuestionId) return;
+
+    const updatedQuestions = AllQuestions.map((question) =>
+      question._id === editingQuestionId
+        ? {
+            ...question,
+            content: inputValue,
+          }
+        : question
+    );
+
+    setAllQuestions(updatedQuestions);
+    setInputValue("");
+    setFilePreview(null);
+    setEditingQuestionId(null);
   };
 
   const handleSendClick = () => {
+    if (inputValue.trim().length < 10) {
+      setErrorMessage("Question must be at least 10 characters long");
+      return;
+    }
+
     if (inputValue.trim() !== "" || filePreview) {
-      const newQuestion = {
-        text: inputValue,
-        filePreview,
-      };
-      dispatch(addQuestion(newQuestion));
+      sendQuestionToServer(inputValue);
       setInputValue("");
       setFilePreview(null);
       if (fileInputRef.current) {
@@ -64,209 +90,196 @@ const CommunityPageBody = () => {
     }
   };
 
-  const handleAttachmentClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-    setIsAttachmentOpen(false);
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFilePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  const getFileType = (filePreview) => {
-    if (filePreview.startsWith('data:image/')) {
-      return 'image';
-    } else if (filePreview.startsWith('data:application/pdf')) {
-      return 'pdf';
-    } else {
-      return 'other'; 
+  const sendQuestionToServer = async (text) => {
+    try {
+      const communityId = selectedCommunity;
+      const response = await axiosInstance.post(`/communities/${communityId}/addQuestion`,
+        { content: text },
+        {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        }
+      );
+      console.log("Question sent successfully:", response.data);
+      fetchQuestions();
+    } catch (error) {
+      console.error("Error sending question:", error);
     }
   };
 
-  const getFilePreview = (filePreview, fileType) => {
-    if (fileType === 'image') {
-      return <img src={filePreview} alt="File Preview"  style={{width:"70%" ,height:"150px"}}/>;
-    } else if (fileType === 'pdf') {
-      return <div style={{ width: '70%', overflow: 'hidden',overflowX: 'hidden', overflowY: 'hidden',scrollbarWidth: 'none', position: 'relative' }}>
-       <embed src={filePreview} type="application/pdf" width="100%" height="150px"  style={{overflow:"hidden",overflowX: 'hidden', overflowY: 'hidden',scrollbarWidth: 'none',}}/>
-       <a href={filePreview} download="file.pdf" style={{ position: 'absolute', top: '10px', right: '8%', zIndex: '999' }}>
-        <img src={download} alt="not found" />
-       </a>
-     </div>
-    } else {
-      return 
+
+
+  // console.log(AllQuestions)
+  const fetchQuestions = async () => {
+    try {
+      const communityId = selectedCommunity;
+      const response = await axiosInstance.get(`/communities/${communityId}/getCommunityQuestions`, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      });
+      setAllQuestions(response.data.questions);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
     }
   };
-  
 
+  useEffect(() => {
+    fetchQuestions();
+  }, [token, selectedCommunity]);
 
+  const handleSendAnswerClick = async (questionId) => {
+    if (replyInput.trim().length < 3) {
+      setReplyError("Answer must be at least 3 characters long");
+      return;
+    }
 
-
-
-
-
-
-
-
-
-  const handleEmotionClick = (emoji) => {
-    setInputValue((prevValue) => prevValue + emoji);
-  };
-
-  const handleCommentButtonClick = (messageId) => {
-    setSelectedMessageId(messageId);
-  };
-
-  const handleSendCommentClick = () => {
     if (replyInput.trim() !== "") {
-      const newComment = {
-        personPic:
-          "https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-        text: replyInput,
-        time: getCurrentTime(),
-      };
-
-      setReplies([...replies, newComment]);
-      setReplyInput("");
-
+      try {
+        const communityId = selectedCommunity;
+        const response = await axiosInstance.post(`/communities/${communityId}/questions/${questionId}/answerQuestion`,
+          { content: replyInput },
+          {
+            headers: {
+              Authorization: 'Bearer ' + token
+            }
+          }
+        );
+        console.log("Answer sent successfully:", response.data);
+        fetchQuestions();
+        setReplyInput("");
+        setShowAnswerMap((prevMap) => ({
+          ...prevMap,
+          [questionId]: true,
+        }));
+        fetchAnswers(questionId);
+      } catch (error) {
+        console.error("Error sending answer:", error);
+      }
     }
   };
 
-  
+  // console.log(answers)
+  const fetchAnswers = async (questionId) => {
+    try {
+      const communityId = selectedCommunity;
+      const response = await axiosInstance.get(`/communities/${communityId}/questions/${questionId}/answers`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [questionId]: response.data.answers,
+      }));
+    } catch (error) {
+      console.error("Error fetching question details:", error);
+    }
+  };
 
-  // const handleSendReplyClick = () => {
-  //   if (replyInput.trim() !== "") {
-  //     const newReply = {
-  //       personPic:
-  //         "https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-  //       text: replyInput,
-  //       time: getCurrentTime(),
-  //     };
+  const handleToggleAnswer = (questionId) => {
+    setShowAnswerMap((prevMap) => ({
+      ...prevMap,
+      [questionId]: !prevMap[questionId],
+    }));
 
-  //     setReplies([...replies, newReply]);
-  //     setReplyInput("");
-  //     setRepliesVisible(false);
+    if (!showAnswerMap[questionId]) {
+      fetchAnswers(questionId);
+    }
+  };
+
+  // const handleEditQuestion = (questionId) => {
+  //   const question = AllQuestions.find((q) => q._id === questionId);
+  //   if (question) {
+  //     setInputValue(question.content);
+  //     setEditingQuestionId(questionId);
   //   }
   // };
 
-  const handlePopupMenuOpen = (messageId, event) => {
-    event.preventDefault(); // Prevent the default context menu
-    setSelectedMessageId(messageId);
-    setIsPopupMenuOpen(true);
-  };
-
-  const handlePopupMenuClose = () => {
-    setSelectedMessageId(null);
-    setIsPopupMenuOpen(false);
-  };
-
-  
-
- 
-  const handleSendEdit = () => {
-    const selectedMessage = messages.find(
-      (message) => message.id === selectedMessageId
-    );
-    if (selectedMessage) {
-      const updatedMessages = messages.map((message) =>
-        message.id === selectedMessageId
-          ? {
-              ...message,
-              text: inputValue,
-              filePreview,
-            }
-          : message
-      );
-
-      setMessages(updatedMessages);
-      setInputValue("");
-      setFilePreview(null);
-      setSelectedMessageId(null);
-    }
-  };
-
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
-  };
-
-  const [showAnswerMap, setShowAnswerMap] = useState({}); 
-  const handleToggleAnswer = (questionIndex) => {
-    setShowAnswerMap((prevMap) => ({
-      ...prevMap,
-      [questionIndex]: !prevMap[questionIndex], 
-    }));
-  };
-
-  const handleSendAnswerClick = (questionIndex) => {
-    if (replyInput.trim() !== "") {
-      dispatch(addAnswer(questionIndex, replyInput));
-      setReplyInput("");
-    }
-  };
   return (
     <div className="community-page-body">
       <div className="community-body">
-        {questions.map((question, index) => (
-          <div key={index} className="question">
+        {AllQuestions.map((question) => (
+          <div key={question._id} className="question">
             <div className="question-header">
               <div className="info">
-                <img src={avatar} alt="not found" />
-                <p>username</p>
+                <img src={avatar} alt="Avatar" />
+                <p>{question.author.firstName} {question.author.lastName}</p>
               </div>
-              <img src={menu} alt="not found" />
+              {/* <img src={menu} alt="Menu" onClick={() => handleEditQuestion(question._id)} /> */}
             </div>
-            <p>{question.text}</p>
-            <div className="question-file">
-              {question.filePreview && getFilePreview(question.filePreview, getFileType(question.filePreview))}
-            </div>
+            <p className="ques">{question.content}</p>
             <div className="noOfReplys">
-               <p>10 Reply</p>
+              <p>{question.answers.length} Reply</p>
             </div>
-            <div className="answer" onClick={() => handleToggleAnswer(index)}>
-              <img src={answer} alt="not found" />
-              {showAnswerMap[index] ? <p>hide all answers</p> : <p>leave an answer</p>}
+            <div className="answer" onClick={() => handleToggleAnswer(question._id)}>
+              <img src={answer} alt="Answer" />
+              {showAnswerMap[question._id] ? <p>hide all answers</p> : <p>leave an answer</p>}
             </div>
 
-            {showAnswerMap[index] &&
-              <div className="addAnswer">
-                 <input type="text" placeholder="Write your Question..." value={replyInput} onChange={(e) => setReplyInput(e.target.value)} />
-                   <FontAwesomeIcon icon={faPaperclip}  className="answer-attachmentan-icon" onClick={handleAttachmentClick}/>      
-                   <FontAwesomeIcon icon={faPaperPlane} className={`answer-send-icon ${ inputValue.trim() !== "" || filePreview ? "active" : "" }`}  onClick={() => handleSendAnswerClick(index)} />
-                 <input type="file" ref={fileInputRef} style={{ display: "none" }} onClick={handleAttachmentClick} />
+            {showAnswerMap[question._id] && (
+              <div className="addAnswer"style={replyError ? { borderColor: "red" } : {}}>
+                <input
+                  type="text"
+                  placeholder="Write your Answer..."
+                  value={replyInput}
+                  onChange={handleReplyInputChange}
+                  
+                />
+                <FontAwesomeIcon
+                  icon={faPaperPlane}
+                  className={`answer-send-icon ${replyInput.trim() !== "" || filePreview ? "active" : ""}`}
+                  onClick={() => handleSendAnswerClick(question._id)}
+                />
+                {replyError && <p className="error-message">{replyError}</p>}
               </div>
-             }
+            )}
+            <div className="AllAnswers">
+             {showAnswerMap[question._id] && answers[question._id] && answers[question._id].map((answer) => (
+              <div className="answer-content-love">
+              <div key={answer._id} className="answer-content">
+                <img src={defaultAvatar} alt="not found" className="avatarAnswer"/>
+                <div className="contentAnswer">
+                    <div className="leftAnswer">
+                        <p>{answer.author.firstName} {answer.author.lastName}</p>
+                        <span>{answer.content}</span>
+                    </div>
+                    <div className="rightAnswer">
+                       <small>{new Date(answer.createdAt).toLocaleString()}</small>
+                    </div>
+                </div>
+                {/* <div className="loved">
+                   <img src={loved} alt="not found" />
+                    <p>2 likes</p>
+                 </div> */}
+              </div>
+              
+              </div>
+             ))}
+            </div>
           </div>
         ))}
       </div>
       <div className="community-fixed-input-field">
-        <input type="text" placeholder="Write your Question..."  value={inputValue}  onChange={handleInputChange} />
-         <FontAwesomeIcon
-          icon={faPaperclip}
-          className="community-attachment-icon"
-          onClick={handleAttachmentClick}
-        />      
+        <input
+          type="text"
+          placeholder="Write your Question..."
+          value={inputValue}
+          onChange={handleInputChange}
+          style={errorMessage ? { borderColor: "red" } : {}}
+        />
         <FontAwesomeIcon
           icon={faPaperPlane}
-          className={`community-send-icon ${ inputValue.trim() !== "" || filePreview ? "active" : "" }`}
-          onClick={selectedMessageId ? handleSendEdit : handleSendClick}
+          className={`community-send-icon ${inputValue.trim() !== "" || filePreview ? "active" : ""}`}
+          onClick={handleSendClick}
         />
-        <input type="file" ref={fileInputRef} style={{ display: "none" }} onChange={handleFileChange} />
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
-      
     </div>
   );
 };
-
 
 export default CommunityPageBody;

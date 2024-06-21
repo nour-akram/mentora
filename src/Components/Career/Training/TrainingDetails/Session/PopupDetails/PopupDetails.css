@@ -1,0 +1,44 @@
+.session_details{
+    background-color: #206F7E;
+    color: white;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    z-index: 99999999999999;
+    width: 70%;
+    padding: 10px;
+    border-radius: 15px;
+}
+.session_details .title{
+    width: 100%;
+}
+.session_details .title h4{
+    width: 40%;
+    margin: auto;
+}
+.session_details .session_title,.session_details .session_description,.session_details .session_duration{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.session_details .close{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+.session_details .close button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 0px 15px;
+    color: #206F7E;
+    font-family: "trochi";
+    font-size: 16px;
+    cursor: pointer;
+    background-color: white;
+}

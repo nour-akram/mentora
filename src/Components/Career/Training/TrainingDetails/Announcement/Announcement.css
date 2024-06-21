@@ -1,0 +1,28 @@
+.sessionList .AnnouncementItem {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #E7E7E7;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+.sessionList .AnnouncementItem .left_session{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    color: black;
+    font-family: "trochi";
+    width: 85%;
+}
+.sessionList .AnnouncementItem .left_session p{
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: #206F7E;
+}
+.AnnouncementItem .right_session img{
+    cursor: pointer;
+}

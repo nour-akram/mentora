@@ -1,0 +1,71 @@
+.popup_Announcement{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-family: "trochi";
+    background-color: #206f7e;
+    z-index: 9999999999999;
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    padding: 5px 10px ;
+    border-radius: 15px;
+}
+.popup_Announcement .header_Announcement{
+     width: 100%;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+}
+.popup_Announcement .header_Announcement img{
+    cursor: pointer;
+}
+.popup_Announcement .feilds_announcement{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.popup_Announcement .feilds_announcement .upload{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+.popup_Announcement .feilds_announcement .upload button{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    gap: 10px;
+    padding: 0 5px;
+    font-family: "trochi";
+    color:#206F7E;
+    font-size: 15px;
+    font-weight: 700;
+}
+.popup_Announcement .feilds_announcement .announcementData{
+    width: 100%;
+    display: flex;
+    align-items: self-start;
+    flex-direction: column;
+}
+.popup_Announcement .feilds_announcement .announcementData textarea{
+    width: 99%;
+    height: 85px;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 1px solid white;
+    resize: none;
+    color: white;
+    outline: none;
+    padding: 5px;
+}
+
+.popup_Announcement .feilds_announcement .announcementData .error {
+    color: red;
+    margin-top: 5px;
+}

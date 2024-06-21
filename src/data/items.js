@@ -16,6 +16,10 @@ import LogOut from "../assets/logOutIcon.png";
 import LogOut2 from "../assets/logOutIcon2.png";
 import ContactUs from "../assets/contactUsIcon.png";
 import ContactUs2 from "../assets/contactUsIcon2.png";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
+const role = cookies.get('role');
   export const items=[
     {
       id: 1,
@@ -31,30 +35,31 @@ import ContactUs2 from "../assets/contactUsIcon2.png";
     },
     {
       id: 3,
-      item_name: "mentor",
+      item_name: "Schedule",
       icon:<img src={MentorSectionIcon}  alt="not found"/>,
       icon2:<img src={MentorSectionIcon2}  alt="not found"/>,
-      item_name2:"section"
+      // item_name2:"section"
     },
     {
       id: 4,
-      item_name: "career",
+      item_name: role === 'Mentor' ? "career" : "mentor",
       icon:<img src={CareerIcon}  alt="not found"/>,
       icon2:<img src={CareerIcon2}  alt="not found"/>,
+      item_name2: role === 'Mentor' ? "" : "Section",
     },
     {
       id: 5,
       item_name: "book",
       icon:<img src={Bookmarks}  alt="not found"/>,
       icon2:<img src={Bookmarks2}  alt="not found"/>,
-      item_name2:"marks"
+      item_name2:"Marks"
     },
     {
       id: 6,
       item_name: "request",
       icon:<img src={RequestMentor}  alt="not found"/>,
       icon2:<img src={RequestMentor2}  alt="not found"/>,
-      item_name2:"mentor"
+      item_name2:"Mentor"
     },
     {
       id: 7,

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../../api/axiosConfig';
 import * as Types from "./actionTypes";
 // import {sessionService} from "redux-react-session"
 export const setRegistrationStatus = (payload) => ({
@@ -24,22 +24,22 @@ export const updateUserData = (userData) => {
     payload: error,
   });
   
-  export const postUserData = (userData,setShowError,setSuccessOtp,setOverlay) => {
+  export const postUserData = (userData, setShowError, setSuccessOtp, setOverlay) => {
     return async (dispatch) => {
       dispatch(postUserDataRequest());
-  
       try {
-        const response = await axios.post('http://localhost:4000/api/user/register', userData);
+        const response = await axiosInstance.post('/user/register', userData);
         dispatch(postUserDataSuccess(response.data));
-        console.log(response)
+        console.log(response);
         dispatch(setRegistrationStatus(true));
   
         if (response.status === 201) {
           console.log('OTP sent successfully');
           setSuccessOtp('OTP sent successfully');
-          setOverlay(true)
+          setOverlay(true);
         } else if (response.status === 400) {
           console.error('Email is already registered');
+          setShowError('Email is already registered');
         } else {
           console.log('Unexpected response:', response.data);
         }
@@ -48,15 +48,21 @@ export const updateUserData = (userData) => {
         if (error.response && error.response.status === 400) {
           console.error('Error:', error.response.data.error);
           setShowError(error.response.data.error);
-          setOverlay(true)
+          setOverlay(true);
+        } else if (error.response && error.response.data) {
+          // Display the detailed error message from the response
+          console.error('Error:', error.response.data.message);
+          setShowError(error.response.data.message);
+          setOverlay(true);
         } else {
           console.error('Error:', error);
           setShowError('An unexpected error occurred.');
-          setOverlay(true)
+          setOverlay(true);
         }
       }
     };
   };
+  
   
   
 

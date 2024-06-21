@@ -1,0 +1,11 @@
+.logoutimage{
+    margin: auto;
+}
+.logoutbutton{
+    position: absolute;
+    bottom: 4%;
+    right: 10%;
+    padding: 15px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+}

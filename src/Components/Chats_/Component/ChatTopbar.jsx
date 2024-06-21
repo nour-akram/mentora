@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Picker } from "emoji-mart";
-// import "emoji-mart/css/emoji-mart.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisV,
@@ -12,12 +11,12 @@ import {
   faEdit,
 } from "@fortawesome/free-solid-svg-icons";
 import "./ChatTopbar.css";
-import io from "socket.io-client";
-
-const socket = io("");
+import Cookies from "universal-cookie";
+import axiosInstance from "../../../api/axiosConfig";
 
 const ChatTopbar = ({
-  personName = "Nour Shazly",
+  selectedChat,
+  userName,
   personPic = "https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
 }) => {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
@@ -28,37 +27,50 @@ const ChatTopbar = ({
   const [filePreview, setFilePreview] = useState(null);
   const fileInputRef = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [sent, setSent] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [isPopupMenuOpen, setIsPopupMenuOpen] = useState(false);
   const popupMenuRef = useRef(null);
-const [isExpanded, setIsExpanded] = useState(false);
-const [expandedImage, setExpandedImage] = useState(null);
-
-
-  useEffect(() => {
-    const storedMessages = localStorage.getItem("chatMessages");
-    if (storedMessages) {
-      setMessages(JSON.parse(storedMessages));
-    }
-  }, []);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedImage, setExpandedImage] = useState(null);
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
+  const [senderId, setCurrentUserId] = useState(null);
+  const [receiverId, setReceiverId] = useState(null);
+  const selectedChatId = selectedChat; 
 
   useEffect(() => {
-    localStorage.setItem("chatMessages", JSON.stringify(messages));
-  }, [messages]);
+    const fetchMessagesData = async () => {
+      try {
+        const response = await axiosInstance.get(`/chat/findChat/${selectedChatId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  useEffect(() => {
-    socket.on("receiveMessage", (receivedMessage) => {
-      setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-      localStorage.setItem(
-        "chatMessages",
-        JSON.stringify([...messages, receivedMessage])
-      );
-    });
+        const result = response.data;
+        const senderId = result.data.users[0]._id;
+        const receiverId = result.data.users[1]._id;
 
-    return () => {
-      socket.off("receiveMessage");
+        const firstName = result.data.users[1].firstName;
+        const lastName = result.data.users[1].lastName;
+
+        const userName = `${firstName} ${lastName}`;
+        console.log(userName);
+        setMessages(result.data.messages);
+        setSent(true);
+        setCurrentUserId(senderId);
+        setReceiverId(receiverId);
+      } catch (error) {
+        console.error("Error fetching chat data:", error);
+      }
     };
-  }, [messages]);
+
+    fetchMessagesData();
+  }, [token, selectedChatId]);
+
+  console.log(senderId);
+  console.log(receiverId);
 
   const handleOptionsClick = () => {
     setIsOptionsMenuOpen(!isOptionsMenuOpen);
@@ -69,10 +81,22 @@ const [expandedImage, setExpandedImage] = useState(null);
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    setMessages([]);
-    localStorage.removeItem("chatMessages");
-    setIsDeleteModalOpen(false);
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await axiosInstance.delete("/chat/deleteMessage", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        console.log("Resource deleted successfully!");
+      } else {
+        console.log("Error deleting the resource");
+      }
+    } catch (error) {
+      console.error("Error deleting resource:", error);
+    }
   };
 
   const handleDeleteCancel = () => {
@@ -83,53 +107,9 @@ const [expandedImage, setExpandedImage] = useState(null);
     setInputValue(e.target.value);
   };
 
-  const handleSendClick = () => {
-    if (inputValue.trim() !== "" || filePreview) {
-      const newMessage = {
-        id: Date.now(),
-        personPic: personPic,
-        text: inputValue,
-        time: getCurrentTime(),
-        sent: true,
-        seen: false,
-        filePreview,
-      };
-
-      // Send the new message to the server
-      socket.emit("sendMessage", newMessage);
-
-      const updatedMessages = [...messages, newMessage];
-      setMessages(updatedMessages);
-      setInputValue("");
-      setFilePreview(null);
-      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
-      if (fileInputRef.current) {
-        fileInputRef.current.value = null;
-      }
-    }
-  };
-const handleImageClick = (imageSrc) => {
-  setExpandedImage(imageSrc);
-  setIsExpanded(true);
-};
-
-const handleCloseClick = () => {
-  setIsExpanded(false);
-  setExpandedImage(null);
-};
-  const handleAttachmentClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-    setIsAttachmentOpen(false);
-    setIsEmotionsOpen(false);
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setInputValue(file.name);
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setFilePreview(reader.result);
@@ -138,11 +118,75 @@ const handleCloseClick = () => {
     }
   };
 
-  const handleStatusClick = () => {
+  const handleSendClick = async () => {
+    if (inputValue.trim() !== "" || filePreview) {
+      const formData = new FormData();
+      formData.append("files", filePreview); 
+      formData.append("message", inputValue);
+      formData.append("senderID", senderId); 
+      formData.append("chatID", selectedChatId); 
+      formData.append("receiveId", receiverId); 
+
+      try {
+        const response = await axiosInstance.post("/chat/", formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          const result = response.data;
+          console.log("Message Sent:", result);
+
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              id: result.id,
+              message: inputValue,
+              files: filePreview
+                ? [{ filePath: filePreview, fileType: "image/jpeg" }]
+                : [],
+              senderID: senderId,
+              createdAt: new Date(),
+              isRead: false,
+            },
+          ]);
+          setInputValue("");
+          setFilePreview(null);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = null;
+          }
+        } else {
+          throw new Error("Failed to send message");
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
   };
 
+  const handleImageClick = (imageSrc) => {
+    setExpandedImage(imageSrc);
+    setIsExpanded(true);
+  };
+
+  const handleCloseClick = () => {
+    setIsExpanded(false);
+    setExpandedImage(null);
+  };
+
+  const handleAttachmentClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+    setIsAttachmentOpen(false);
+    setIsEmotionsOpen(false);
+  };
+
+  const handleStatusClick = () => {};
+
   const handleEmotionClick = (emoji) => {
-    setInputValue((prevValue) => prevValue + emoji);
+    setInputValue((prevValue) => prevValue + emoji.native);
   };
 
   const handlePopupMenuOpen = (messageId, event) => {
@@ -156,57 +200,94 @@ const handleCloseClick = () => {
     setIsPopupMenuOpen(false);
   };
 
+  const fetchChatData = async (selectedChatId) => {
+    try {
+      const response = await axiosInstance.get(`/chat/findChat/${selectedChatId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = response.data;
+      setMessages(result.data.messages);
+      setSent(true);
+    } catch (error) {
+      console.error("Error fetching chat data:", error);
+    }
+  };
+
   const handleEditClick = () => {
     const selectedMessage = messages.find(
-      (message) => message.id === selectedMessageId
+      (message) => message._id === selectedMessageId
     );
     if (selectedMessage) {
-      setInputValue(selectedMessage.text);
-      setFilePreview(selectedMessage.filePreview || null);
+      setInputValue(selectedMessage.message);
+      setFilePreview(selectedMessage.files[0]?.filePath || null);
       setIsPopupMenuOpen(false);
     }
   };
 
-  const handleDeleteClick = () => {
-    if (selectedMessageId) {
-      const updatedMessages = messages.filter(
-        (message) => message.id !== selectedMessageId
-      );
-      setMessages(updatedMessages);
-      setSelectedMessageId(null);
-      setIsPopupMenuOpen(false);
-      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+  const handleDeleteClick = async () => {
+    if (!selectedMessageId) return;
+
+    try {
+      const response = await axiosInstance.delete(`/chat/deleteMessage/${selectedMessageId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200) {
+        const updatedMessages = messages.filter(
+          (message) => message._id !== selectedMessageId
+        );
+        setMessages(updatedMessages);
+        setSelectedMessageId(null);
+        setIsPopupMenuOpen(false);
+        console.log("Message deleted successfully!");
+      } else {
+        throw new Error("Failed to delete message");
+      }
+    } catch (error) {
+      console.error("Error deleting message:", error);
     }
   };
 
-  const handleSendEdit = () => {
-    const selectedMessage = messages.find(
-      (message) => message.id === selectedMessageId
-    );
-    if (selectedMessage) {
-      const updatedMessages = messages.map((message) =>
-        message.id === selectedMessageId
-          ? {
-            ...message,
-            text: inputValue,
-            filePreview,
-          }
-          : message
+  const handleSendEdit = async () => {
+    if (!selectedMessageId) return;
+
+    try {
+      const response = await axiosInstance.put(`/chat/editMessage/${selectedMessageId}`, 
+        { message: inputValue },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      setMessages(updatedMessages);
-      setInputValue("");
-      setFilePreview(null);
-      setSelectedMessageId(null);
-      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+      if (response.status === 200) {
+        const updatedMessages = messages.map((message) =>
+          message._id === selectedMessageId
+            ? { ...message, message: inputValue }
+            : message
+        );
+        setMessages(updatedMessages);
+        setSelectedMessageId(null);
+        setInputValue("");
+        setFilePreview(null);
+        setIsPopupMenuOpen(false);
+        console.log("Message updated successfully!");
+      } else {
+        const errorText = await response.data;
+        console.error("Failed to update message:", errorText);
+        throw new Error("Failed to update message");
+      }
+    } catch (error) {
+      console.error("Error updating message:", error);
     }
-  };
-
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
   };
 
   return (
@@ -214,7 +295,7 @@ const handleCloseClick = () => {
       <div className="top-bar">
         <img src={personPic} alt="Person Pic" className="person-pic" />
         <div className="person-details">
-          <h3 className="personName">{personName}</h3>
+          <h3 className="personName">{userName}</h3>
         </div>
         <div className="options-chat">
           <FontAwesomeIcon icon={faEllipsisV} onClick={handleOptionsClick} />
@@ -236,14 +317,16 @@ const handleCloseClick = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`message ${message.sent ? "sent" : "received"}`}
+                className={`message ${
+                  message.senderID === senderId ? "sent" : "received"
+                }`}
                 onContextMenu={(event) =>
-                  handlePopupMenuOpen(message.id, event)
+                  handlePopupMenuOpen(message._id, event)
                 }
               >
                 <div className="message-info"></div>
                 <div className="message-content">
-                  {isPopupMenuOpen && selectedMessageId === message.id && (
+                  {isPopupMenuOpen && selectedMessageId === message._id && (
                     <div className="popup-menu" ref={popupMenuRef}>
                       <div onClick={handleEditClick}>
                         <FontAwesomeIcon icon={faEdit} /> Edit
@@ -253,30 +336,34 @@ const handleCloseClick = () => {
                       </div>
                     </div>
                   )}
-                  {message.filePreview && (
+                  {message.files && message.files.length > 0 && (
                     <div className="file-preview">
-                      {message.filePreview.startsWith("data:image") && (
-                        <img src={message.filePreview} alt="File Preview" />
-
-                        
-                      )}
-                      {message.filePreview.startsWith(
-                        "data:application/pdf"
-                      ) && (
-                          <embed
-                            src={message.filePreview}
-                            type="application/pdf"
-                          />
-                        )}
+                      {message.files.map((file, fileIndex) => (
+                        <div key={fileIndex}>
+                          {file.fileType.startsWith("image/") ? (
+                            <img
+                              src={`http://localhost:4000/${file.filePath}`}
+                              alt="File Preview"
+                            />
+                          ) : (
+                            <embed
+                              src={`http://localhost:4000/${file.filePath}`}
+                              type={file.fileType}
+                            />
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
-                  <p className="text">{message.text}</p>
+                  <p className="text">{message.message}</p>
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <p className="time">{message.time}</p>
+                    <p className="time">
+                      {new Date(message.createdAt).toLocaleTimeString()}
+                    </p>
                     <div className="status-icons">
                       <FontAwesomeIcon
                         icon={faCheck}
-                        className={message.seen ? "seen" : "not-seen"}
+                        className={message.isRead ? "seen" : "not-seen"}
                         onClick={handleStatusClick}
                       />
                     </div>
@@ -306,8 +393,9 @@ const handleCloseClick = () => {
             />
             <FontAwesomeIcon
               icon={faPaperPlane}
-              className={`send-icon ${inputValue.trim() !== "" || filePreview ? "active" : ""
-                }`}
+              className={`send-icon ${
+                inputValue.trim() !== "" || filePreview ? "active" : ""
+              }`}
               onClick={selectedMessageId ? handleSendEdit : handleSendClick}
             />
             <input

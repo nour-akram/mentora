@@ -227,8 +227,11 @@ align-self: center;
     padding: 10px;
     border-radius: 5px;
     color: #206f7e;
+    border: solid 1px #206f7e;
 }
-
+.community-fixed-input-field input:focus{
+  border: solid 1px #206f7e;
+}
 .community-icons-container {
   display: flex;
 }
@@ -410,7 +413,7 @@ margin-left: 40px;
 .question{
   background-color: #206f7e;
   box-shadow: 0px 11px 5.8px rgba(0, 0, 0, 0.25);
-  border-radius: 25px 25px 25px 0;
+  border-radius: 25px 25px 0px 25px;
   padding: 5px 10px;
   width: 92%;
   margin: 0 auto;
@@ -425,6 +428,11 @@ margin-left: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.question .ques{
+  margin: 10px;
+    font-size: 14px;
+    font-family: "'Trocchi'";
 }
 .question .question-header .info{
   display: flex;
@@ -467,6 +475,7 @@ margin-left: 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 5px;
 }
 .question .addAnswer .icons{
   display: flex;
@@ -483,4 +492,63 @@ margin-left: 40px;
 .question .addAnswer .answer-attachmentan-icon,.question .addAnswer .answer-send-icon{
   color: white;
   cursor: pointer;
+}
+.answer-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 97%;
+}
+.answer-content .avatarAnswer{
+  width: 25px;
+  height: 25px;
+}
+.answer-content .contentAnswer {
+  display: flex;
+  align-items: center;
+  width: 94%;
+  justify-content: space-between;
+  border: 1px solid white;
+  padding: 8px 5px;
+  border-radius: 15px;
+  background-color: white;
+  color: #206f7e;
+}
+.answer-content .contentAnswer .leftAnswer{
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+}
+.answer-content .contentAnswer .leftAnswer p{
+  margin: 0;
+  font-weight: 400;
+  font-size: 14px;
+}
+.answer-content .contentAnswer .leftAnswer span{
+  color: black;
+  opacity: 0.7;
+}
+.AllAnswers {
+  max-height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+.loved {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+}
+.loved p{
+  margin: 0;
+}
+.answer-content-love{
+  display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }

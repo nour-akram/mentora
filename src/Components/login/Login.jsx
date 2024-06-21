@@ -6,7 +6,7 @@ import googleIcon from "../../assets/googleIcon.svg"
 import FacebookIcon from "../../assets/FacebookIcon.svg"
 import invisibleEye from "../../assets/invisible-eye.svg";
 import visibleEye from '../../assets/visible-eye.svg';
-import axios from 'axios';
+import axiosInstance from '../../api/axiosConfig';
 import exit from "../../assets/exit.png";
 import error404 from "../../assets/error404.png"
 import error400 from "../../assets/error400.png"
@@ -63,11 +63,12 @@ const LoginPage = () => {
    
    if (formData.email&&formData.password) {
    try {
-      const response = await axios.post('http://localhost:4000/api/user/login', formData);
-      const { Token, refreshToken } = response.data;
-      
+      const response = await axiosInstance.post('/user/login', formData);
+      const { Token, refreshToken,userRole} = response.data;
+      // console.log(response.data)
       if (response.status === 200) {
         cookies.set('Bearer', Token);
+        cookies.set('role', userRole);
         // user.setAuth({Token,refreshToken})
         console.log(user,"contex")
         console.log(response.data.message);
@@ -109,7 +110,7 @@ const LoginPage = () => {
     const exitPopupError404 = () => {
       setShowError('')
       setOverlay(false);
-      navigate("/register")
+      // navigate("/register")
     };
     const exitPopupError401 = () => {
       setShowError('')

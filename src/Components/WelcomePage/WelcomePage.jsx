@@ -1,10 +1,10 @@
 import React from 'react'
 import "./Welcome.css";
 import { useNavigate } from 'react-router';
-import image1 from '../../assets/unsplash_1.png';
-import image2 from '../../assets/unsplash_2.png';
-import image3 from '../../assets/unsplash_3.png';
-import image4 from '../../assets/unsplash_4.png';
+// import image1 from '../../assets/aboutus2.png';
+// import image2 from '../../assets/aboutus4.png';
+// import image3 from '../../assets/aboutus3.png';
+// import image4 from '../../assets/aboutus5.png';
 import image5 from '../../assets/unsplash_5.png';
 import image6 from '../../assets/unsplash_6.png';
 import image7 from '../../assets/unsplash_7.png';
@@ -12,6 +12,7 @@ import image8 from '../../assets/unsplash_8.png';
 import variety from '../../assets/finding-variety.png';
 import experts from '../../assets/experts.png';
 import efforts from '../../assets/efforts.png';
+import images from "../../assets/images.png"
 function WelcomePage() {
   const Navigate=useNavigate();
   return (
@@ -24,14 +25,7 @@ function WelcomePage() {
             <button onClick={()=>{Navigate('/register',{replace:true})}} > Get Start</button>
           </div>
           <div className="rightSection">
-              <div className="verticalImages">
-                <img src={image1} alt="not found" />
-                <img src={image3} alt="not found" />
-              </div>
-              <div className="horizentalImages">
-                <img src={image2} alt="not found" />
-                <img src={image4} alt="not found" />
-              </div>
+             <img src={images} alt="" />
           </div>
         </div>
         <div className="secondSection">

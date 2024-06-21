@@ -100,9 +100,13 @@ const RegisterContinue=({ updateUserData, postUserData }) =>{
     const exitPopupError400 = () => {
       setShowError('')
       setOverlay(false);
-      Navigate("/register")
+      // Navigate("/register")
     };
-  
+    const exitPopupError=()=>{
+      setShowError('')
+      setOverlay(false);
+      Navigate("/register")
+    }
    const exitPopupSuccessSendOtp =()=>{
       setSuccessOtp('')
       setOverlay(false)
@@ -215,6 +219,15 @@ const RegisterContinue=({ updateUserData, postUserData }) =>{
                     <div className="popup-register">
                        <div className="popup-header">
                          <img src={exit} alt="not found"  onClick={()=>{exitPopupError404()}}/>
+                       </div>
+                       <img src={error404} alt="not found" />
+                       <p style={{ color: 'red', fontFamily: "'Trocchi', serif", fontSize: '16px' }} >{showError}</p>
+                     </div>
+                  :
+                   showError==="Email is already registered"?  
+                    <div className="popup-register">
+                       <div className="popup-header">
+                         <img src={exit} alt="not found"  onClick={()=>{exitPopupError()}}/>
                        </div>
                        <img src={error404} alt="not found" />
                        <p style={{ color: 'red', fontFamily: "'Trocchi', serif", fontSize: '16px' }} >{showError}</p>

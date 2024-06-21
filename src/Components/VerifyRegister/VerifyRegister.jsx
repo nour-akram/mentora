@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./VerifyRegister.css";
 import image from "../../assets/Verification.png";
-import axios from "axios";
+import axiosInstance from '../../api/axiosConfig';
 import exit from "../../assets/exit.png";
 import error404 from "../../assets/error404.png"
 import error400 from "../../assets/error400.png"
@@ -129,7 +129,7 @@ const VerifyRegister = ({userData}) => {
 
   const verifyRegisterOTP = async (verifyOtp) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/user/verifyRegisterOTP",verifyOtp );
+      const response = await axiosInstance.post("/user/verifyRegisterOTP",verifyOtp );
       if (response.status === 200) {
         console.log("Registration completed successfully");
         setSuccessOtp('Registration completed successfully');

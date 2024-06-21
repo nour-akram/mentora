@@ -43,7 +43,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    height: 70%;
+    padding-bottom: 8%;
+    /* height: 70%; */
 }
 .header-create-community{
     display: flex;
@@ -119,6 +120,7 @@
         font-family: "trochi";
         font-size: 16px;
         cursor: pointer;
+        margin: 20px 0;
     }
     .exit-popup{
         cursor: pointer;
@@ -148,4 +150,73 @@
     .popupCreateCommunity .twoOptions label p{
         color: white;
         font-family: "trochi";
+    }
+    .error-message{
+        position: absolute;
+        top: 100%;
+        color: red;
+    }
+    .success-popup {
+        position: absolute;
+        top: 30%;
+        left: 20%;
+        width: 60%;
+        color: #206F7E;
+        border-radius: 10px;
+        padding: 12px;
+        background-color: white;
+        z-index: 9999999999999999;
+        font-family: "trochi";
+        font-weight: 700;
+    }
+    .success-popup p{
+        text-align: center;
+    }
+    .find_comm{
+        background: transparent;
+    position: absolute;
+    right: 4%;
+    top: 25%;
+    cursor: pointer;
+    }
+    .search-results ul{
+        display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    padding: 4px;
+    max-height: 230px;
+    border: solid 1px white;
+    border-radius: 10px;
+    background-color: #C8C8C8;
+    }
+    .search-results ul li{
+        list-style: none;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    }
+    .search-results h4{
+        margin: 15px 0;
+    }
+    .search-results ul li .nameComm{
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        text-transform: capitalize;
+    }
+    .search-results ul li button{
+        background: #206F7E;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    }
+    .selectCommPlz{
+        display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     }

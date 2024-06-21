@@ -1,0 +1,126 @@
+.Training-Container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    margin-left: 20%;
+    background-color: white;
+    margin-top: 5%;
+    gap: 15px;
+    border-radius: 15px;
+    position: relative;
+    padding: 1% 2%;
+    min-height: 490px;
+    
+}
+.notrainingYet{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.createTrainingSticky{
+    background-color: #206f7e;
+    padding: 5px 8px;
+    border-radius: 8px;
+    position: fixed;
+    bottom: 8%;
+    right: 2%;
+    z-index: 1000;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25),  -3px -3px 5px rgba(0, 0, 0, 0.25);   
+    cursor: pointer;
+}
+.Training-Container .training_header{
+    display: flex;
+    width: 45%;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.Training-Container .training_header .all,.Training-Container .training_header .running,.Training-Container .training_header .finished{
+    background-color: white;
+    color: #206f7e;
+    font-family: "trochi";
+    border: 1px solid #206f7e;
+    border-radius: 10px;
+    padding: 10px 25px;
+}
+
+.tab {
+    background-color: white;
+    color: #206f7e;
+    font-family: "trochi";
+    border: 1px solid #206f7e;
+    border-radius: 10px;
+    padding: 15px 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tab p{
+    margin: 0;
+  }
+  .tab.active {
+    background-color: #206f7e;
+    color: white;
+    /* border-color: #007bff; */
+  }
+  
+  .training-list{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    
+  }
+  .training-item{
+    display: flex;
+    align-items: flex-start;
+    width: 98%;
+    justify-content: space-between;
+    background-color: #C8C8C8;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .training-item .firstPart{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 80%;
+  }
+  .training-item .firstPart .imageTraining{
+    width: 80px;
+    height: 80px;
+  }
+  .training-item .firstPart .middel{
+    display: flex;
+    flex-direction: column;
+    font-family: "trochi";
+    color: #206f7e;
+    width: 40%;
+    margin: 0;
+  }
+  .training-item .firstPart .middel p{
+    margin: 5px 0;
+  }
+  .training-item .firstPart .middel .detailsTraining{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    /* background-color: red; */
+    justify-content: space-between;
+  }
+  .training-item .firstPart .middel .detailsTraining .track,.training-item .firstPart .middel .detailsTraining .mentee{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+
+  .requests-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+  }

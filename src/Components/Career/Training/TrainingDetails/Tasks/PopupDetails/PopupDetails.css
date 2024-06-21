@@ -1,0 +1,11 @@
+.file_display {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .file_display embed {
+    width: 90%;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); 
+  }

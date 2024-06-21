@@ -1,0 +1,49 @@
+.pdf_popup {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 50%;
+    background:#206F7E;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index:999999999999;
+    padding: 20px 0;
+    border-radius: 10px;
+
+}
+.pdf_popup_content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 95%;
+}
+.pdf_popup_header{
+    display: flex;
+    width: 100%;
+    /* background-color: red; */
+    justify-content: flex-end;
+    
+}
+.pdf_popup_header img{
+    cursor: pointer;
+}
+/* .pdf_popup_content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.pdf_popup_header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pdf_popup_header img {
+    cursor: pointer;
+} */

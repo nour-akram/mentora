@@ -1,0 +1,32 @@
+.session_training_container{
+    margin: 0 auto;
+    width: 100%;
+}
+.sessionList{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-direction: column;
+    width: 100%;
+}
+.sessionList .sessionItem{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #E7E7E7;
+    border-radius: 10px;
+    padding: 5px 10px;
+   
+}
+.sessionList .sessionItem .left_session{
+    cursor: pointer;
+}
+.sessionList .sessionItem .left_session,.sessionList .sessionItem .right_session{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.sessionList .sessionItem .right_session img{
+  cursor: pointer;
+}
