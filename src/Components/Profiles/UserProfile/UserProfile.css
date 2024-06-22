@@ -84,17 +84,17 @@
     gap: 5px;
     border-radius: 10px;
     cursor: pointer;
-    padding: 0;
+    padding: 8px;
 }
 .profile-content .userData .leftSide .editProfile button p,.profile-content .userData .leftSide .Apply-as-mentor button p{
     color: white;
     font-family: 'Trocchi', serif;
-    font-size: 14px;
+    font-size: 10px;
 }
 .profile-content .userData .leftSide .Apply-as-mentor{
     display: flex;
     justify-content: center;
-    width: 55%;
+    width: 60%;
     /* background-color: aqua; */
 }
 .profile-content .userData .leftSide .Apply-as-mentor button{
@@ -104,10 +104,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    /* gap: 5px; */
     border-radius: 10px;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 7px;
 }
 .line1{
     width: 100%;
@@ -179,4 +179,56 @@
     justify-content: space-between;
     margin: 0;
     flex-wrap: wrap;
+}
+.viewprofilementor{
+    display: flex;
+    align-items: center;
+    /* gap: 10px; */
+    /* background-color: red; */
+    width: 100%;
+    justify-content: space-between;
+    /* flex-direction: column; */
+}
+.followandmessageprofile{
+    display: flex;
+    align-items: center;
+    /* gap: 10px; */
+}
+.followprofile button,.Messageprofile button{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 10px;
+}
+.RequestMentor button p{
+    width: 100%;
+    margin: 0;
+}
+.RequestMentor button{
+    padding: 12px 12px;
+    border-radius: 10px;
+}
+.profileuserviewbyhimself{
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    width: 90%;
+}
+.editProfile button p,.Apply-as-mentor button p{
+    margin: 0;
+    /* font-size: 10px; */
+}
+.profileuserviewbyhimself{
+    justify-content: space-between;
+    align-items: center;
+}
+.editProfile button p{
+    font-size: 10px;
+}
+.followandmessageprofile{
+    width: 70%;
+    /* background: red; */
+    justify-content: space-between;
 }

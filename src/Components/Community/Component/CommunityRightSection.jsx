@@ -267,7 +267,7 @@ const CommunityRightSection = ({ showCreatePopup, handelshowCreatePopup, overlay
           )}
         </div>
       </div>
-      {selectedCommunity?<CommunityPageBody selectedCommunity={selectedCommunity}/>:<div className="selectCommPlz"><img src={selectCommunity} alt="not found"/></div>}
+      {selectedCommunity?<CommunityPageBody selectedCommunity={selectedCommunity} />:<div className="selectCommPlz"><img src={selectCommunity} alt="not found"/></div>}
       
       {isDeleteModalOpen && (
         <div className="delete-modal-overlay">

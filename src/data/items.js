@@ -20,66 +20,69 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 const role = cookies.get('role');
-  export const items=[
-    {
-      id: 1,
-      item_name: "home",
-      icon:<img src={HomeIcon}  alt="not found"/>,
-      icon2:<img src={HomeIcon2}  alt="not found"/>,
-    },
-    {
-      id: 2,
-      item_name: "community",
-      icon:<img src={CommunityIcon}  alt="not found"/>,
-      icon2:<img src={CommunityIcon2}  alt="not found"/>,
-    },
-    {
-      id: 3,
-      item_name: "Schedule",
-      icon:<img src={MentorSectionIcon}  alt="not found"/>,
-      icon2:<img src={MentorSectionIcon2}  alt="not found"/>,
-      // item_name2:"section"
-    },
-    {
-      id: 4,
-      item_name: role === 'Mentor' ? "career" : "mentor",
-      icon:<img src={CareerIcon}  alt="not found"/>,
-      icon2:<img src={CareerIcon2}  alt="not found"/>,
-      item_name2: role === 'Mentor' ? "" : "Section",
-    },
-    {
-      id: 5,
-      item_name: "book",
-      icon:<img src={Bookmarks}  alt="not found"/>,
-      icon2:<img src={Bookmarks2}  alt="not found"/>,
-      item_name2:"Marks"
-    },
-    {
-      id: 6,
-      item_name: "request",
-      icon:<img src={RequestMentor}  alt="not found"/>,
-      icon2:<img src={RequestMentor2}  alt="not found"/>,
-      item_name2:"Mentor"
-    },
-    {
-      id: 7,
-      item_name: "about",
-      icon:<img src={AboutUs}  alt="not found"/>,
-      icon2:<img src={AboutUs2}  alt="not found"/>,
-      item_name2:"us"
-    },
-    {
-      id: 8,
-      item_name: "contact",
-      icon:<img src={ContactUs}  alt="not found"/>,
-      icon2:<img src={ContactUs2}  alt="not found"/>,
-      item_name2:"us"
-    },
-    {
-      id: 9,
-      item_name: "log",
-      icon:<img src={LogOut}  alt="not found"/>,
-      icon2:<img src={LogOut2}  alt="not found"/>,
-      item_name2:"out"
-    }
-]
+
+const items = [
+  {
+    id: 1,
+    item_name: "home",
+    icon: <img src={HomeIcon} alt="not found" />,
+    icon2: <img src={HomeIcon2} alt="not found" />,
+  },
+  {
+    id: 2,
+    item_name: "community",
+    icon: <img src={CommunityIcon} alt="not found" />,
+    icon2: <img src={CommunityIcon2} alt="not found" />,
+  },
+  {
+    id: 3,
+    item_name: "Schedule",
+    icon: <img src={MentorSectionIcon} alt="not found" />,
+    icon2: <img src={MentorSectionIcon2} alt="not found" />,
+    // item_name2:"section"
+  },
+  role !== 'Admin' && {
+    id: 4,
+    item_name: role === 'Mentor' ? "career" : "mentor",
+    icon: <img src={CareerIcon} alt="not found" />,
+    icon2: <img src={CareerIcon2} alt="not found" />,
+    item_name2: role === 'Mentor' ? "" : "Section",
+  },
+  {
+    id: 5,
+    item_name: "book",
+    icon: <img src={Bookmarks} alt="not found" />,
+    icon2: <img src={Bookmarks2} alt="not found" />,
+    item_name2: "Marks"
+  },
+  {
+    id: 6,
+    item_name: "request",
+    icon: <img src={RequestMentor} alt="not found" />,
+    icon2: <img src={RequestMentor2} alt="not found" />,
+    item_name2: "Mentor"
+  },
+  {
+    id: 7,
+    item_name: "about",
+    icon: <img src={AboutUs} alt="not found" />,
+    icon2: <img src={AboutUs2} alt="not found" />,
+    item_name2: "us"
+  },
+  {
+    id: 8,
+    item_name: "contact",
+    icon: <img src={ContactUs} alt="not found" />,
+    icon2: <img src={ContactUs2} alt="not found" />,
+    item_name2: "us"
+  },
+  {
+    id: 9,
+    item_name: "log",
+    icon: <img src={LogOut} alt="not found" />,
+    icon2: <img src={LogOut2} alt="not found" />,
+    item_name2: "out"
+  }
+].filter(item => item); // Filter out falsy values
+
+export { items };

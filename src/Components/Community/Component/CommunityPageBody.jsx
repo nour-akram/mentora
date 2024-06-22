@@ -48,7 +48,7 @@ const CommunityPageBody = ({ selectedCommunity }) => {
 
   const handleReplyInputChange = (e) => {
     setReplyInput(e.target.value);
-    setReplyError(""); // Reset the reply error message
+    setReplyError(""); 
   };
 
   const handlePopupMenuClose = () => {

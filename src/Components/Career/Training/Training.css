@@ -31,7 +31,7 @@
 }
 .Training-Container .training_header{
     display: flex;
-    width: 45%;
+    width: 70%;
     justify-content: space-between;
     align-items: center;
     
@@ -97,6 +97,7 @@
     display: flex;
     flex-direction: column;
     font-family: "trochi";
+    align-items: flex-start;
     color: #206f7e;
     width: 40%;
     margin: 0;

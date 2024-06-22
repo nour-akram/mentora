@@ -21,24 +21,25 @@ const CommunityPage = () => {
   const cookies = new Cookies();
   const token = cookies.get("Bearer");
   // console.log(selectedCommunity,"hi")
-  useEffect(() => {
-    const fetchCommunities = async () => {
-      try {
-        const response = await axiosInstance.get("/communities/getUserCommunities", {
-          headers: {
-            Authorization: 'Bearer ' + token
-          }
-        });
-        const communitiesArray = Array.isArray(response.data.communities) ? response.data.communities : [];
-        setCommunities(communitiesArray);
-        setFilteredCommunities(communitiesArray); 
-      } catch (error) {
-        console.error('Error fetching communities:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  const fetchCommunities = async () => {
+    try {
+      const response = await axiosInstance.get("/communities/getUserCommunities", {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      });
+      const communitiesArray = Array.isArray(response.data.communities) ? response.data.communities : [];
+      setCommunities(communitiesArray);
+      setFilteredCommunities(communitiesArray); 
+    } catch (error) {
+      console.error('Error fetching communities:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchCommunities();
   }, [token]);
 
@@ -85,6 +86,7 @@ const CommunityPage = () => {
   const [showCreatePopup, setShowCreatePopup] = useState(false);
   const handelshowCreatePopup = () => {
     setShowCreatePopup(!showCreatePopup);
+    fetchCommunities()
     handleOverlay();
     if (!showCreatePopup) {
       setPlus(false);
@@ -177,6 +179,7 @@ const CommunityPage = () => {
               overlay={overlay}
               communityDetails={communityDetails}
               selectedCommunity={selectedCommunity}
+              
             />
           </div>
         </div>

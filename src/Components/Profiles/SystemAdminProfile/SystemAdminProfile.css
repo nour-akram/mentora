@@ -38,8 +38,19 @@
   color: #206F7E;
   padding: 10px;
 }
+.profileAdmin-content .userData .leftSide .imgadmin{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: none;
+    display: flex;
+    overflow: hidden;
+    /* overflow: none; */
+}
+
 .profileAdmin-content .userData .leftSide .userImage{
-    width: 35%;
+   width: 100%;
+   object-fit: contain;
 }
 .profileAdmin-content .userData .leftSide .userName,.profileAdmin-content .userData .leftSide .bio{
     text-transform: capitalize;
@@ -71,7 +82,7 @@
 .profileAdmin-content .userData .leftSide .editProfile{
     display: flex;
     justify-content: center;
-    width: 40%;
+    width: 60%;
 }
 .profileAdmin-content .userData .leftSide .editProfile button{
     background-color: #206F7E;
@@ -83,7 +94,7 @@
     gap: 5px;
     border-radius: 10px;
     cursor: pointer;
-    
+    padding: 10px;
 }
 .profileAdmin-content .userData .leftSide .editProfile button p,.profileAdmin-content .userData .leftSide .Apply-as-mentor button p{
     color: white;
@@ -93,7 +104,7 @@
 .profileAdmin-content .userData .leftSide .Apply-as-mentor{
     display: flex;
     justify-content: center;
-    width: 45%;
+    width: 55%;
     /* background-color: aqua; */
 }
 .profileAdmin-content .userData .leftSide .Apply-as-mentor button{
@@ -106,6 +117,7 @@
     gap: 5px;
     border-radius: 10px;
     cursor: pointer;
+    padding: 0;
 }
 .line1{
     width: 100%;
@@ -142,7 +154,8 @@
 .info-div{
     display: flex;
     width: 98%;
-
+    align-items: flex-start;
+    gap: 3%;
 }
 .userData{
     display: flex;

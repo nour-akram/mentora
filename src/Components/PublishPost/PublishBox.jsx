@@ -4,7 +4,7 @@ import './PublishBox.css';
 import vidoeIcon from "../../assets/video.png";
 import articleIcon from "../../assets/articleIcon.png";
 import photoIcon from "../../assets/photoIcon.png";
-const PublishBox = ({handleShowPopup ,handlePopupType}) => {
+const PublishBox = ({handleShowPopup ,handlePopupType,currentuserimage}) => {
   const handleClick = (type) => {
     handlePopupType(type);
     handleShowPopup();
@@ -12,7 +12,7 @@ const PublishBox = ({handleShowPopup ,handlePopupType}) => {
   return (
     <div className="publish-box">
       <div className="user-info">
-        <img className="user-image" src={defalutAvatar} alt="not found"/>
+        <img className="user-image" src={currentuserimage?currentuserimage:defalutAvatar} alt="not found"/>
         <input onClick={() => handleClick('article')} className="input-field" type="text" placeholder="Share what’s on your mind..." readOnly/>
       </div>
 

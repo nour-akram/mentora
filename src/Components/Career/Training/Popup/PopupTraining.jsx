@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import axios from '../../../../api/axiosConfig';
 import "./Popup.css";
 import exit from "../../../../assets/exitWhite.png";
 import upload from "../../../../assets/Upload icon.png";
 import createTraining from "../../../../assets/createTraining.png";
-
+import Cookies from "universal-cookie";
+import axiosInstance from '../../../../api/axiosConfig';
 const tracks = ["Web Development", "Data Science", "Mobile App Development", "UI/UX Design", "Cloud Computing"];
 
-export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => {
+export const PopupTraining = ({ handleShowPopupTraining, handleAddTraining }) => {
   const [selectedTrack, setSelectedTrack] = useState("");
   const [customTrack, setCustomTrack] = useState("");
   const [formData, setFormData] = useState({
@@ -15,16 +17,15 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
     language: "",
     durationNumber: "",
     durationUnit: "",
-    salary: "",
-    mentees: "",
+    Salary: "",
+    numberOfRequiredMentees: "",
     description: "",
     requirements: "",
     level: "",
     image: null,
   });
   const [formErrors, setFormErrors] = useState({});
- 
- 
+
   const handleFileUploadClick = () => {
     document.getElementById('fileUpload').click();
   };
@@ -43,45 +44,96 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "durationNumber" || name === "durationUnit") {
+      const newDuration = name === "durationNumber" ? value + formData.durationUnit : formData.durationNumber + value;
+      setFormData({ ...formData, durationNumber: name === "durationNumber" ? value : formData.durationNumber, durationUnit: name === "durationUnit" ? value : formData.durationUnit, duration: newDuration });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  
   const handleFileChange = (e) => {
     const imageFile = e.target.files[0];
     if (imageFile) {
       setFormData({ ...formData, image: imageFile });
     }
   };
-  
 
-
-
-
-
-
-
-
-
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {};
-  
+
     Object.keys(formData).forEach((key) => {
-      if (key !== 'image' && !formData[key]) { 
+      if (key !== 'image' && !formData[key]) {
         errors[key] = true;
       }
     });
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
     } else {
       setFormErrors({});
-      handleAddTraining(formData); 
-      handleShowPopupTraining(); 
+       console.log(formData.image)
+    
+      const requestData = {
+        name: formData.name,
+        description: formData.description,
+        track: formData.track,
+        level: formData.level,
+        requirements: formData.requirements,
+        Salary: formData.Salary,
+        duration: `${formData.durationNumber} ${formData.durationUnit}`,
+        numberOfRequiredMentees: formData.numberOfRequiredMentees,
+        language: formData.language,
+        image:formData.image,
+      };
+
+      // const form = new FormData();
+      // form.append("name", formData.name);
+      // form.append("description", formData.description);
+      // form.append("track", formData.track);
+      // form.append("level", formData.level);
+      // form.append("requirements", formData.requirements);
+      // form.append("Salary", formData.Salary);
+      // form.append("duration", `${formData.durationNumber} ${formData.durationUnit}`);
+      // form.append("numberOfRequiredMentees", formData.numberOfRequiredMentees);
+      // form.append("language", formData.language);
+
+      // console.log('FormData object:', form);
+      // form.forEach((value, key) => {
+      //   console.log(key, value);
+      // });
+      
+      const cookies = new Cookies();
+      const token = cookies.get("Bearer");
+
+      
+      // console.log('FormData object:', form);
+      // form.forEach((value, key) => {
+      //   console.log(key, value);
+      // });
+
+      try {
+        const response = await axiosInstance.post('/training/create-training', requestData, {
+          headers: {
+            Authorization: "Bearer " + token,
+           'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        if (response.status === 200) {
+          console.log('Training created successfully');
+          // handleAddTraining(form); 
+          handleShowPopupTraining();
+        } else {
+          console.error('Failed to create training');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
-  
 
   return (
     <div className='popup_Training'>
@@ -138,11 +190,8 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
               style={{ borderColor: formErrors.language ? 'red' : 'initial' }}
             >
               <option value="">Select a language...</option>
-              <option value="arabic">Arabic</option>
-              <option value="english">English</option>
-              <option value="spanish">Spanish</option>
-              <option value="french">French</option>
-              <option value="german">German</option>
+              <option value="Arabic">Arabic</option>
+              <option value="English">English</option>
             </select>
           </div>
           <div className="right">
@@ -177,8 +226,8 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
             <input
               type="number"
               min="0"
-              name="salary"
-              value={formData.salary}
+              name="Salary"
+              value={formData.Salary}
               onChange={handleInputChange}
               style={{ borderColor: formErrors.salary ? 'red' : 'initial' }}
             />
@@ -188,8 +237,8 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
             <input
               type="number"
               min="0"
-              name="mentees"
-              value={formData.mentees}
+              name="numberOfRequiredMentees"
+              value={formData.numberOfRequiredMentees}
               onChange={handleInputChange}
               style={{ borderColor: formErrors.mentees ? 'red' : 'initial' }}
             />
@@ -229,11 +278,11 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
               type="radio"
               id="beginner"
               name="level"
-              value="beginner"
+              value="begineers"
               onChange={handleInputChange}
               style={{ borderColor: formErrors.level ? 'red' : 'initial' }}
             />
-            <label htmlFor="beginner">Beginner</label>
+            <label htmlFor="beginner">Begineers</label>
             <input
               type="radio"
               id="advanced"
@@ -256,3 +305,6 @@ export const PopupTraining = ({ handleShowPopupTraining ,handleAddTraining}) => 
     </div>
   );
 };
+
+export default PopupTraining;
+

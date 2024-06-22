@@ -1,10 +1,10 @@
-import { React, useState } from "react";
+import { React, useState,useCallback,useEffect } from "react";
 import Navbar from "../../Navbar/Navbar";
 import "./SystemAdminProfile.css";
 import avatar from "../../../assets/Default_avatar.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-
+import rolee from "../../../assets/role.png"
 import edit from "../../../assets/edit.png";
 import Apply from "../../../assets/ApplyAsMentor.png";
 import info from "../../../assets/infoImage.png";
@@ -15,14 +15,16 @@ import gender from "../../../assets/gender.png";
 import Language from "../../../assets/language.png";
 import Interests from "../../../assets/interests.png";
 import Sidebar from "../../Sidebar/Sidebar";
-
+import axiosInstance from "../../../api/axiosConfig";
+import Cookies from "universal-cookie";
+import { useLocation } from 'react-router-dom';
+import {Popup} from "../UserProfile/Popup/Popup"
+// import { Popup } from "../UserProfile/Popup/Popup"
 export const SystemAdminProfile = () => {
-  const [time, setTime] = useState("");
-  const [date, setDate] = useState("");
-  const [Salary, setSalary] = useState("");
-  const [timeError, setTimeError] = useState("");
-  const [dateError, setDateError] = useState("");
-  const [SalaryError, setSalaryError] = useState("");
+  const [user, setUser] = useState({});
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+
   const [requests, setRequests] = useState([
     {
       id: 1,
@@ -89,6 +91,81 @@ export const SystemAdminProfile = () => {
     setDetailsPopup(false);
   };
 
+
+
+
+
+
+
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
+  const role = cookies.get("role");
+  // const location = useLocation();
+  // const { userId } = location.state || {};
+  // console.log(userId)
+  const getUser = useCallback(async () => {
+    try {
+      // console.log(auth);
+      const { data } = await axiosInstance.get(`/user/`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log(data.data.user);
+      setUser(data.data.user);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, []);
+
+  const getFollowers = useCallback(async () => {
+    try {
+      // console.log(auth);
+      const { data } = await axiosInstance.get(
+        "user/followers",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      // console.log(data);
+      setFollowers(data.data.Followers);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, []);
+
+  const getFollowing = useCallback(async () => {
+    try {
+      // console.log(auth);
+      const { data } = await axiosInstance.get(
+        "user/following",
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      // console.log(data);
+      setFollowing(data.data.Following);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    getUser();
+    getFollowers();
+    getFollowing();
+  }, []);
+  console.log(followers, following);
+
+
+  const[showEditPopup,setShowEditPopup]=useState(false)
+  const handelshowEditPopup=()=>{
+    setShowEditPopup(!showEditPopup)
+  }
   return (
     <>
       <div className="profileAdmin-container">
@@ -98,102 +175,123 @@ export const SystemAdminProfile = () => {
           <div className="userData">
             <div className="info-div">
               <div className="leftSide">
-                <img src={avatar} alt="not found" className="userImage" />
-                <h2 className="userName">nour akram</h2>
-                <p className="bio">web developer with react</p>
-                <div className="followers-following">
-                  <div className="no-posts">
-                    <span>0</span>
-                    <p>Posts</p>
-                  </div>
-                  <div className="followers">
-                    <span>0</span>
-                    <p>Followers</p>
-                  </div>
-                  <div className="following">
-                    <span>0</span>
-                    <p>Following</p>
-                  </div>
+                <div className="imgadmin">
+                  <img src={user.profilePicture} alt="not found" className="userImage" />
                 </div>
+                <h2 className="userName">{user.name}</h2>
+                <p className="bio">{user.bio}</p>
+                <div className="followers-following">
+                <div className="no-posts">
+                  <span>{(user.posts && user.posts.length) | 0}</span>
+                  <p>Posts</p>
+                </div>
+                <div className="followers">
+                  <span>{followers.length}</span>
+                  <p>Followers</p>
+                </div>
+                <div className="following">
+                  <span>{following.length}</span>
+                  <p>Following</p>
+                </div>
+              </div>
                 <div className="buttons">
-                  <div className="editProfile">
+                  <div className="editProfile" onClick={handelshowEditPopup}>
                     <button>
                       <p>Edit profile</p>
                       <img src={edit} alt="not found" />
-                    </button>
-                  </div>
-                  <div className="Apply-as-mentor">
-                    <button>
-                      <p>Apply as Mentor</p>
-                      <img src={Apply} alt="not found" />
                     </button>
                   </div>
                 </div>
                 <div className="line1"></div>
               </div>
               <div className="info">
-                <h2>info</h2>
-                <div className="img">
-                  <img src={info} alt="not found" />
-                </div>
-                <div className="line"></div>
-                <div className="Data">
-                  <div className="item">
-                    <div className="nameIcon">
-                      <img src={email} alt="not found" />
-                      <p>Email :</p>
-                    </div>
-                    <div className="value">
-                      <p>nourakram286@gmail.com</p>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <div className="nameIcon">
-                      <img src={country} alt="not found" />
-                      <p>Country :</p>
-                    </div>
-                    <div className="value">
-                      <p>Egypt</p>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <div className="nameIcon">
-                      <img src={age} alt="not found" />
-                      <p>Age :</p>
-                    </div>
-                    <div className="value">
-                      <p>22</p>
-                    </div>
-                  </div>
-                  <div className="item">
-                    <div className="nameIcon">
-                      <img src={gender} alt="not found" />
-                      <p>Gender :</p>
-                    </div>
-                    <div className="value">
-                      <p>Female</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="line"></div>
-                <div className="Languages">
-                  <img src={Language} alt="not found" />
-                  <p>Languages</p>
-                </div>
-                <ul className="listofLanguages">
-                  <li>Arabic</li>
-                  <li>English</li>
-                </ul>
-                <div className="line"></div>
-                <div className="Interests">
-                  <img src={Interests} alt="not found" />
-                  <p>Interests</p>
-                </div>
-                <ul className="listofInterests">
-                  <li>programming</li>
-                  <li>programming</li>
-                </ul>
+              <h2>info</h2>
+              <div className="img">
+                <img src={info} alt="not found" />
               </div>
+              <div className="line"></div>
+              <div className="Data">
+                <div className="item">
+                  <div className="nameIcon">
+                    <img src={email} alt="not found" />
+                    <p>Email :</p>
+                  </div>
+                  <div className="value">
+                    <p>{user.email || "Loading..."}</p>
+                  </div>
+                </div>
+                {user.country &&
+                   <div className="item">
+                   <div className="nameIcon">
+                     <img src={country} alt="not found" />
+                     <p>Country :</p>
+                   </div>
+                   <div className="value">
+                     <p>{user.country}</p>
+                   </div>
+                   </div>
+                
+                }
+                {role &&
+                   <div className="item">
+                   <div className="nameIcon">
+                   <img src={rolee} alt="not found" />
+                     <p>Role :</p>
+                   </div>
+                   <div className="value">
+                     <p>{role}</p>
+                   </div>
+                   </div>
+                
+                }
+               
+              </div>
+              <div className="line"></div>
+               {user.languages&&
+                 <>
+                     <div className="Languages">
+                <img src={Language} alt="not found" />
+                <p>Languages</p>
+              </div>
+              <ul
+                className="listofLanguages"
+                style={{ flexDirection: "column", alignItems: "flex-start" }}
+              >
+                {!user.languages && "Loading..."}
+                {user.languages &&
+                  user.languages.map((lan, index) => (
+                    <li key={index}>{lan}</li>
+                  ))}
+              </ul>
+              <div className="line"></div>
+                 </>
+               }
+
+
+             
+              {user.interests&&
+                 <>
+                 
+                 <div className="Interests">
+                <img src={Interests} alt="not found" />
+                <p>Interests</p>
+              </div>
+              <ul
+                className="listofInterests"
+                style={{ flexDirection: "column", alignItems: "flex-start" }}
+              >
+                {!user.interests && "Loading..."}
+                {user.interests &&
+                  user.interests.map((int, index) => (
+                    <li key={index}>{int}</li>
+                  ))}
+              </ul>
+                 
+                 </>
+              
+              }
+              
+            </div>
             </div>
             <div className="profileSystem-container">
               <h2>Apply As Mentor Requests</h2>
@@ -314,6 +412,8 @@ export const SystemAdminProfile = () => {
           </div>
         </div>
       </div>
+      {showEditPopup&&<Popup handelshowEditPopup={handelshowEditPopup} getUser={getUser}/>}
+      {showEditPopup&&<div className="overlay"></div>}
     </>
   );
 };

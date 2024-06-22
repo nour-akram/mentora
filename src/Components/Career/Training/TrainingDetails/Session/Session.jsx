@@ -8,7 +8,7 @@ import edit from "../../../../../assets/editSession.png";
 import delet from "../../../../../assets/deleteSession.png";
 import { PopupDetails } from './PopupDetails/PopupDetails';
 
-export const Session = () => {
+export const Session = ({trainingId}) => {
   const [showPopupSession, setShowPopupSession] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
