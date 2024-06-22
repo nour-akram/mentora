@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import "./TrainingDetails.css";
 import Navbar from '../../../Navbar/Navbar';
 import Sidebar from '../../../Sidebar/Sidebar';
@@ -23,33 +23,51 @@ export const TrainingDetails = () => {
   const location = useLocation();
   const { training } = location.state || {};
   const [activeLink, setActiveLink] = useState('chat');
+  const [trainingStored, setTrainingStored] = useState(null);
+
+
+  useEffect(() => {
+    if (training) {
+      localStorage.setItem('currentTraining', JSON.stringify(training));
+    }
+  }, [training]);
+
+  useEffect(() => {
+    const storedTraining = localStorage.getItem("currentTraining");
+    if (storedTraining) {
+      setTrainingStored(JSON.parse(storedTraining));
+    }
+  }, []);
+  //  const trainingStored=localStorage.getItem("currentTraining")
+  console.log(trainingStored);
   console.log(training)
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
 
+ 
   const renderContent = () => {
     switch (activeLink) {
       case 'chat':
-        return training ? (
-          <ChatTraining trainingId={training._id} trainingName={training.name} trainigImage={training.TrainingPicture} />
+        return trainingStored?(
+          <ChatTraining trainingId={trainingStored._id} trainingName={trainingStored.name} trainigImage={trainingStored.TrainingPicture} />
         ) : null;
       case 'session':
-        return training ? (
+        return trainingStored ? (
           <Session />
         ) : null;
       case 'material':
-        return (
+        return trainingStored?(
           <Materials />
-        );
+        ):null;
       case 'task':
-        return (
+        return trainingStored? (
           <Tasks />
-        );
+        ):null;
       case 'announcement':
-        return (
+        return trainingStored?(
           <Announcement />
-        );
+        ):null;
       default:
         return null;
     }
