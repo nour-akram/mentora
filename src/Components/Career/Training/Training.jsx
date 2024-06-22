@@ -100,6 +100,7 @@ export const Training = () => {
   
   const handelShowDetailsOfTraining = (training) => {
     navigate(`/training-details/${training.name}`, { state: { training } });
+
   };
   
 

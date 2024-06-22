@@ -23,7 +23,7 @@ export const TrainingDetails = () => {
   const location = useLocation();
   const { training } = location.state || {};
   const [activeLink, setActiveLink] = useState('chat');
-
+  console.log(training)
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
@@ -36,7 +36,7 @@ export const TrainingDetails = () => {
         ) : null;
       case 'session':
         return training ? (
-          <Session trainingId={training._id} />
+          <Session />
         ) : null;
       case 'material':
         return (
