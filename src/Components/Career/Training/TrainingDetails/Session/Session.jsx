@@ -7,14 +7,16 @@ import link from "../../../../../assets/linkSession.png";
 import edit from "../../../../../assets/editSession.png";
 import delet from "../../../../../assets/deleteSession.png";
 import { PopupDetails } from './PopupDetails/PopupDetails';
+import axiosInstance from '../../../../../api/axiosConfig';
+import Cookies from "universal-cookie";
 
-export const Session = ({trainingId}) => {
+export const Session = ({ trainingId }) => {
   const [showPopupSession, setShowPopupSession] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
-  const [editSession, setEditSession] = useState(null); 
+  const [editSession, setEditSession] = useState(null);
 
   useEffect(() => {
     const savedSessions = localStorage.getItem('sessions');
@@ -30,6 +32,11 @@ export const Session = ({trainingId}) => {
     }
   }, [sessions, isDataLoaded]);
 
+  useEffect(() => {
+    if (isDataLoaded && trainingId) {
+      fetchAllSessionsMentor();
+    }
+  }, [isDataLoaded, trainingId]);
 
   const handleShowPopupSession = () => {
     setShowPopupSession(!showPopupSession);
@@ -46,6 +53,7 @@ export const Session = ({trainingId}) => {
       setSessions([...sessions, newSession]);
     }
     setShowPopupSession(false);
+    fetchAllSessionsMentor();
   };
 
   const handleShowDetails = (session) => {
@@ -58,29 +66,43 @@ export const Session = ({trainingId}) => {
     setSelectedSession(null);
   };
 
-  const handleEditSession = (index) => {
-    setEditSession(index);
-    setShowPopupSession(true);
+  // const handleEditSession = (index) => {
+  //   setEditSession(index);
+  //   setShowPopupSession(true);
+  // };
+
+  // const handleDeleteSession = (index) => {
+  //   const updatedSessions = sessions.filter((session, i) => i !== index);
+  //   setSessions(updatedSessions);
+  // };
+
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
+
+  const fetchAllSessionsMentor = async () => {
+    try {
+      const getSessionsResponse = await axiosInstance.get(`/training/getSessions/${trainingId}`, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      console.log('Sessions:', getSessionsResponse.data.data);
+      setSessions(getSessionsResponse.data.data.sessions); 
+    } catch (error) {
+      console.error('Error fetching sessions:', error);
+    }
   };
 
-  const handleDeleteSession = (index) => {
-    const updatedSessions = sessions.filter((session, i) => i !== index);
-    setSessions(updatedSessions);
-  };
-
+  console.log(sessions)
   return (
     <div className='session_training_container'>
       {sessions.length > 0 ? (
         <div className="sessionList">
           {sessions.map((session, index) => (
-            <div key={index} className="sessionItem">
-              <div className="left_session" onClick={() => handleShowDetails(session)}>
+            <div key={index} className="sessionItem" onClick={() => handleShowDetails(session)}>
+              <div className="left_session" >
                 <img src={link} alt="not found" />
                 <p>{session.title}</p>
-              </div>
-              <div className="right_session">
-                <img src={edit} alt="not found" onClick={() => handleEditSession(index)} />
-                <img src={delet} alt="not found" onClick={() => handleDeleteSession(index)} />
               </div>
             </div>
           ))}
@@ -90,14 +112,15 @@ export const Session = ({trainingId}) => {
           <img src={nosession} alt="not found" />
         </div>
       )}
-      <div className="createTrainingSticky"  onClick={handleShowPopupSession} >
-        <img src={addTrainingIcon} alt="not found"/>
+      <div className="createTrainingSticky" onClick={handleShowPopupSession}>
+        <img src={addTrainingIcon} alt="not found" />
       </div>
       {showPopupSession && (
         <PopupSession
           handleShowPopupSession={handleShowPopupSession}
-          handleAddSession={handleAddSession}
-          session={editSession !== null ? sessions[editSession] : null} 
+          session={editSession !== null ? sessions[editSession] : null}
+          trainingId={trainingId}
+          handleAddSession={handleAddSession}  
         />
       )}
       {showPopupSession && <div className="overlay"></div>}

@@ -19,7 +19,7 @@ export const PopupDetails = ({ handleCloseDetails, session }) => {
             </div>
             <div className="session_duration">
                  <p>Session Duration:</p>
-                 <p>{session.date} {session.time}</p>
+                 <p>{session.date}</p>
             </div>
           </>
         ) : (

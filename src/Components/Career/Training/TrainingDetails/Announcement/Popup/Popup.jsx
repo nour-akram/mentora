@@ -1,38 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import exit from "../../../../../../assets/exitWhite.png";
+import axiosInstance from '../../../../../../api/axiosConfig'; 
+import Cookies from "universal-cookie";
 import "./Popup.css";
 
-export const Popup = ({ handelshowpopupAnnoucement, handleAddAnnouncement, handleUpdateAnnouncement, announcementToEdit }) => {
-  const [announcementText, setAnnouncementText] = useState("");
+export const Popup = ({ handelshowpopupAnnoucement,fetchAnnouncements, trainingId, handleAddAnnouncement, handleUpdateAnnouncement, announcementToEdit }) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (announcementToEdit) {
-      setAnnouncementText(announcementToEdit.announcement);
+      setTitle(announcementToEdit.title);
+      setDescription(announcementToEdit.description);
     } else {
-      setAnnouncementText(""); 
+      setTitle("");
+      setDescription("");
     }
   }, [announcementToEdit]);
 
-  
-  const handleInputChange = (e) => {
-    setAnnouncementText(e.target.value);
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!announcementText.trim()) {
-      setError("Announcement cannot be empty");
+
+    if (!title.trim() || !description.trim()) {
+      setError("Title and description cannot be empty");
       return;
     }
     setError("");
 
-    if (announcementToEdit) {
-      handleUpdateAnnouncement(announcementToEdit.index, announcementText);
-    } else {
-      handleAddAnnouncement(announcementText);
+    const newAnnouncement = {
+      title:title,
+      description:description,
+      trainingId:trainingId,
+    };
+
+    const cookies = new Cookies();
+    const token = cookies.get("Bearer");
+
+    try {
+      const response = await axiosInstance.post('/training/addAnnouncement', newAnnouncement, {
+        headers: {
+          Authorization: "Bearer " + token,
+        }
+      });
+      // handleAddAnnouncement(newAnnouncement);
+      console.log(response);
+      fetchAnnouncements();
+      handelshowpopupAnnoucement();
+    } catch (error) {
+      console.error('Error adding/updating announcement:', error);
+      setError("An error occurred. Please try again.");
     }
-    handelshowpopupAnnoucement();
   };
 
   return (
@@ -43,10 +69,18 @@ export const Popup = ({ handelshowpopupAnnoucement, handleAddAnnouncement, handl
       </div>
       <form className="feilds_announcement" onSubmit={handleSubmit}>
         <div className="announcementData">
-          <label>Write your Announcement</label>
+          <label>Title</label>
+          <input
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            className='extra-feild'
+            style={{ borderColor: error ? 'red' : '' }}
+          />
+          <label>Description</label>
           <textarea
-            value={announcementText}
-            onChange={handleInputChange}
+            value={description}
+            onChange={handleDescriptionChange}
             style={{ borderColor: error ? 'red' : '' }}
           ></textarea>
           {error && <p className="error">{error}</p>}

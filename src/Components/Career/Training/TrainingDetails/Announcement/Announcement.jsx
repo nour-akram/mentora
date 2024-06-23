@@ -5,7 +5,9 @@ import upload from "../../../../../assets/uploadMaterial.png"
 import { Popup } from './Popup/Popup'
 import edit from "../../../../../assets/editSession.png";
 import delet from "../../../../../assets/deleteSession.png";
-export const Announcement = () => {
+import axiosInstance from '../../../../../api/axiosConfig'
+import Cookies from "universal-cookie";
+export const Announcement = ({trainingId}) => {
   const[showpopupAnnoucement,setshowpopupAnnouncement]=useState(false)
   const handelshowpopupAnnoucement =()=>{
     setshowpopupAnnouncement(!showpopupAnnoucement)
@@ -54,6 +56,27 @@ export const Announcement = () => {
     setAnnouncements(updatedMaterials);
 };
 
+
+const fetchAnnouncements = async () => {
+  const cookies = new Cookies();
+  const token = cookies.get('Bearer');
+  try {
+    const response = await axiosInstance.get(`/training/getAnnouncements/${trainingId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setAnnouncements(response.data.data);
+    console.log(response,"announcement");
+  } catch (error) {
+    console.error('Error fetching announcements:', error);
+  }
+};
+useEffect(() => {
+  
+
+  fetchAnnouncements();
+}, [trainingId]);
   return (
     <div className='session_training_container'>
         {Announcements.length > 0 ? (
@@ -82,7 +105,7 @@ export const Announcement = () => {
         <div className="createTrainingSticky" onClick={handelshowpopupAnnoucement} >
             <img src={upload} alt="not found" />
          </div>
-         {showpopupAnnoucement&&<Popup handelshowpopupAnnoucement={handelshowpopupAnnoucement} handleAddAnnouncement={handleAddAnnouncement} handleUpdateAnnouncement={handleUpdateAnnouncement} announcementToEdit={announcementToEdit}/>}
+         {showpopupAnnoucement&&<Popup handelshowpopupAnnoucement={handelshowpopupAnnoucement} handleAddAnnouncement={handleAddAnnouncement} handleUpdateAnnouncement={handleUpdateAnnouncement}trainingI={trainingId} announcementToEdit={announcementToEdit} fetchAnnouncements={fetchAnnouncements}/>}
          {showpopupAnnoucement&&<div className="overlay"></div>}
 
     </div>

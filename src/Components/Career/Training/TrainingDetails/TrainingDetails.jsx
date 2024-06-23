@@ -54,19 +54,19 @@ export const TrainingDetails = () => {
         ) : null;
       case 'session':
         return trainingStored ? (
-          <Session />
+          <Session trainingId={trainingStored._id}/>
         ) : null;
       case 'material':
         return trainingStored?(
-          <Materials />
+          <Materials trainingId={trainingStored._id}/>
         ):null;
       case 'task':
         return trainingStored? (
-          <Tasks />
+          <Tasks trainingId={trainingStored._id}/>
         ):null;
       case 'announcement':
         return trainingStored?(
-          <Announcement />
+          <Announcement trainingId={trainingStored._id}/>
         ):null;
       default:
         return null;

@@ -70,3 +70,14 @@
     color: red;
     margin-top: 5px;
 }
+.extra-feild{
+    background-color: transparent;
+    width: 100%;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+}
+label{
+    margin-bottom: 8px;
+}

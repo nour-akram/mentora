@@ -199,6 +199,7 @@ const CommunityPageBody = ({ selectedCommunity }) => {
   //   }
   // };
 
+  console.log(AllQuestions)
   return (
     <div className="community-page-body">
       <div className="community-body">

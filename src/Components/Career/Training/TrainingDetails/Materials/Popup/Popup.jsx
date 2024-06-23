@@ -3,13 +3,15 @@ import "./Popup.css";
 import exit from "../../../../../../assets/exitWhite.png";
 import upload from "../../../../../../assets/Upload icon.png";
 import uploadcolored from "../../../../../../assets/uploadMaterialcolored.png";
-
-export const Popup = ({ handleShowPopupMaterial, handleAddMaterial, isEditing, currentMaterial, handleEditMaterial, materialIndex }) => {
+import axiosInstance from '../../../../../../api/axiosConfig'
+import Cookies from "universal-cookie";
+export const Popup = ({ handleShowPopupMaterial, handleAddMaterial, isEditing, currentMaterial, handleEditMaterial, materialIndex, trainingId }) => {
     const [description, setDescription] = useState('');
     const [descriptionError, setDescriptionError] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileError, setFileError] = useState(false);
 
+    console.log(selectedFile)
     useEffect(() => {
         if (isEditing && currentMaterial) {
             setDescription(currentMaterial.description);
@@ -35,6 +37,9 @@ export const Popup = ({ handleShowPopupMaterial, handleAddMaterial, isEditing, c
         setFileError(false);
     };
 
+    
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -45,19 +50,24 @@ export const Popup = ({ handleShowPopupMaterial, handleAddMaterial, isEditing, c
             const base64File = selectedFile instanceof File ? await toBase64(selectedFile) : selectedFile;
             const newMaterial = {
                 description: description,
-                file: base64File
+                files: selectedFile
             };
 
-            if (isEditing) {
-                handleEditMaterial(newMaterial, materialIndex);
-            } else {
-                handleAddMaterial(newMaterial);
+            try {
+                const response = await axiosInstance.post(`/training/${trainingId}/uploadMaterial`, newMaterial, {
+                    headers: {
+                        Authorization: "Bearer " + token,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                console.log('Response:', response.data);
+                setSelectedFile(null);
+                setDescription('');
+                document.getElementById('fileUpload').value = '';
+                handleShowPopupMaterial();
+            } catch (error) {
+                console.error('Error uploading material:', error);
             }
-
-            setSelectedFile(null);
-            setDescription('');
-            document.getElementById('fileUpload').value = '';
-            handleShowPopupMaterial();
         }
     };
 
@@ -102,22 +112,12 @@ export const Popup = ({ handleShowPopupMaterial, handleAddMaterial, isEditing, c
                     {descriptionError && <span className="error">Description is required</span>}
                 </div>
                 <div className="upload">
-                    <button>
+                    <button type="submit">
                         <p>{isEditing ? 'Update' : 'Upload'}</p>
                         <img src={uploadcolored} alt="not found" />
                     </button>
                 </div>
             </form>
-            {/* {selectedFile && (
-                <div className="pdfViewer">
-                    <embed
-                        src={selectedFile instanceof File ? URL.createObjectURL(selectedFile) : selectedFile}
-                        type="application/pdf"
-                        width="100%"
-                        height="500px"
-                    />
-                </div>
-            )} */}
         </div>
     );
 };

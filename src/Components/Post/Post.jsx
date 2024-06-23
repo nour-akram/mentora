@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router';
   
 const cookies = new Cookies();
 const token = cookies.get("Bearer");
-
+const role=cookies.get("role")
 const Post = ({ handleOverlay,fetchArticles,getUser,currentuser ,currentuserimage}) => {
   const { auth } = useContext(User);
   const [showeMenuOption, setShowMeneOption] = useState(false);
@@ -397,7 +397,14 @@ const Post = ({ handleOverlay,fetchArticles,getUser,currentuser ,currentuserimag
 
 
 const navigate = useNavigate();
-
+const navigationtoProfile=(id)=>{
+  if(role==="Admin"){
+    navigate("/profileSystemAdmin",{state:{userId:id}})
+  }
+  else{
+    navigate("/profile",{state:{userId:id}})
+  }
+}
   // Define handleNavigation function directly in the component scope
   
 
@@ -413,7 +420,7 @@ const navigate = useNavigate();
         <div className='post' key={index}>
           <div className="post-header">
             <div className="user-info">
-              <img src={article.author.profilePicture?article.author.profilePicture:avatar} alt="not found"/>
+              <img src={article.author.profilePicture?article.author.profilePicture:avatar} alt="not found" onClick={()=>navigationtoProfile(article.author.id)}/>
               <div className="user-details">
                 <h3>{article.author.firstName} {article.author.lastName}</h3>
                 <p>{dateStr} {timeStr}</p>

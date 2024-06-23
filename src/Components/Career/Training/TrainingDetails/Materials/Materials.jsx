@@ -6,8 +6,10 @@ import { PDFPopup } from './PopupDetails/PopupDetails';
 import edit from "../../../../../assets/editSession.png";
 import delet from "../../../../../assets/deleteSession.png";
 import pdf from "../../../../../assets/pdf.png";
+import Cookies from "universal-cookie";
+import axiosInstance from '../../../../../api/axiosConfig'; 
 
-export const Materials = () => {
+export const Materials = ({ trainingId }) => {
     const [showPopupMaterial, setShowPopupMaterial] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [currentMaterial, setCurrentMaterial] = useState(null);
@@ -21,30 +23,31 @@ export const Materials = () => {
         setShowPopupMaterial(!showPopupMaterial);
     };
 
+    const cookies = new Cookies();
+    const token = cookies.get("Bearer");
     useEffect(() => {
-        const savedSessions = localStorage.getItem('materials');
-        if (savedSessions) {
-            setMaterials(JSON.parse(savedSessions));
-        }
-        setIsDataLoaded(true);
-    }, []);
+        const fetchMaterials = async () => {
+            try {
+                const response = await axiosInstance.get(`/training/allTrainingMateria/${trainingId}`,{ 
+                    headers: {
+                    Authorization: "Bearer " + token,
+                }});
+                console.log(response.data.materials)
+                setMaterials(response.data.materials); 
+                setIsDataLoaded(true);
+            } catch (error) {
+                console.error('Error fetching materials:', error);
+            }
+        };
 
-    useEffect(() => {
-        if (isDataLoaded) {
-            localStorage.setItem('materials', JSON.stringify(materials));
-        }
-    }, [materials, isDataLoaded]);
-
-
+        fetchMaterials();
+    }, [trainingId]);
 
     const handleAddMaterial = (newMaterial) => {
         setMaterials([...materials, newMaterial]);
         setShowPopupMaterial(false);
     };
 
-
-
-    
     const handleEditMaterial = (updatedMaterial, index) => {
         const updatedMaterials = materials.map((material, i) =>
             i === index ? updatedMaterial : material
@@ -87,12 +90,10 @@ export const Materials = () => {
                         <div key={index} className="sessionItem">
                             <div className="left_session" onClick={() => handleShowPDFPopup(material.file)}>
                                 <img src={pdf} alt="not found" />
-                                <p>{material.description}</p>
+                                <p>{material.text}</p>
                             </div>
-                            <div className="right_session">
-                                <img src={edit} alt="not found" onClick={() => handleEditClick(material, index)} />
-                                <img src={delet} alt="not found" onClick={() => handleDeleteMaterial(index)} />
-                            </div>
+                            {}
+                            {showPDFPopup && <PDFPopup fileURL={material.attachmentsUrl[0].url} handleClose={handleClosePDFPopup} />}
                         </div>
                     ))}
                 </div>
@@ -115,9 +116,10 @@ export const Materials = () => {
                     currentMaterial={currentMaterial}
                     handleEditMaterial={handleEditMaterial}
                     materialIndex={materialIndex}
+                    trainingId={trainingId}
                 />
             )}
-            {showPDFPopup && <PDFPopup fileURL={selectedFileURL} handleClose={handleClosePDFPopup} />}
+            
             {showPDFPopup && <div className="overlay"></div>}
         </div>
     );

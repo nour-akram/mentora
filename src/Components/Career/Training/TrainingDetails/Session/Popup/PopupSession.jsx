@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import "./PopupSession.css";
 import exit from "../../../../../../assets/exitWhite.png";
 import createTraining from "../../../../../../assets/createTraining.png";
+import axiosInstance from '../../../../../../api/axiosConfig';
+import Cookies from "universal-cookie";
 
-export const PopupSession = ({ handleShowPopupSession, handleAddSession, session }) => {
+export const PopupSession = ({ handleShowPopupSession, handleAddSession, session, trainingId ,fetchAllSessionsMentor}) => {
   const [formValues, setFormValues] = useState({
     title: '',
     description: '',
@@ -29,7 +31,10 @@ export const PopupSession = ({ handleShowPopupSession, handleAddSession, session
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const cookies = new Cookies();
+  const token = cookies.get("Bearer");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = {
@@ -41,19 +46,49 @@ export const PopupSession = ({ handleShowPopupSession, handleAddSession, session
 
     setFormErrors(errors);
 
+    const sessionCreated = {
+      title: formValues.title,
+      description: formValues.description,
+      trainingId: trainingId,
+      date: `${formValues.date}T${formValues.time}:00Z`,
+    };
+
+    console.log(sessionCreated);
+
     const hasErrors = Object.values(errors).some(error => error);
     if (!hasErrors) {
-      handleAddSession(formValues);
-      setFormValues({ title: '', description: '', date: '', time: '' });
-      handleShowPopupSession();
+      try {
+        const response = await axiosInstance.post('/training/addSession', sessionCreated, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+
+        if (response.status === 200) {
+          console.log(response);
+          handleAddSession(response.data);
+          setFormValues({ title: '', description: '', date: '', time: '' });
+          handleShowPopupSession();
+          fetchAllSessionsMentor()
+        } else {
+          console.log('Failed to add session:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error adding session:', error);
+      }
     } else {
       console.log('Form has errors:', errors);
     }
   };
 
+   useEffect(()=>{
+    fetchAllSessionsMentor()
+   },[])
+
+   
   return (
-    <div className='popup_Training'>
-      <div className="header_training">
+    <div className='popup_Session'>
+      <div className="header_session">
         <p>{session ? 'Edit Session' : 'Create Session'}</p>
         <img src={exit} alt="not found" onClick={handleShowPopupSession} />
       </div>
