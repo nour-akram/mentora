@@ -56,10 +56,11 @@ export const Announcement = ({trainingId}) => {
     setAnnouncements(updatedMaterials);
 };
 
-
-const fetchAnnouncements = async () => {
-  const cookies = new Cookies();
+const cookies = new Cookies();
   const token = cookies.get('Bearer');
+  const role =cookies.get("role")
+const fetchAnnouncements = async () => {
+  
   try {
     const response = await axiosInstance.get(`/training/getAnnouncements/${trainingId}`, {
       headers: {
@@ -95,16 +96,17 @@ useEffect(() => {
           ))}
         </div>
       ) : (
+        
         <div className="notrainingYet">
                <img src={noannouncement} alt="not found" />
         </div>
       )}
 
 
-        
-        <div className="createTrainingSticky" onClick={handelshowpopupAnnoucement} >
+        {role!=="User"&&<div className="createTrainingSticky" onClick={handelshowpopupAnnoucement} >
             <img src={upload} alt="not found" />
-         </div>
+         </div>}
+        
          {showpopupAnnoucement&&<Popup handelshowpopupAnnoucement={handelshowpopupAnnoucement} handleAddAnnouncement={handleAddAnnouncement} handleUpdateAnnouncement={handleUpdateAnnouncement}trainingI={trainingId} announcementToEdit={announcementToEdit} fetchAnnouncements={fetchAnnouncements}/>}
          {showpopupAnnoucement&&<div className="overlay"></div>}
 

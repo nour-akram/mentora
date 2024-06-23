@@ -25,6 +25,7 @@ export const Materials = ({ trainingId }) => {
 
     const cookies = new Cookies();
     const token = cookies.get("Bearer");
+    const role =cookies.get("role")
     useEffect(() => {
         const fetchMaterials = async () => {
             try {
@@ -102,11 +103,11 @@ export const Materials = ({ trainingId }) => {
                     <img src={nomaterial} alt="not found" />
                 </div>
             )}
-
-            <div className="createTrainingSticky" onClick={handleShowPopupMaterial}>
+          {role!=="User"&&<div className="createTrainingSticky" onClick={handleShowPopupMaterial}>
                 <img src={upload} alt="not found" />
             </div>
-
+}
+            
             {showPopupMaterial && <div className="overlay"></div>}
             {showPopupMaterial && (
                 <Popup

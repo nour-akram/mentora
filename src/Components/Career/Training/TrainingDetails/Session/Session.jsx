@@ -78,7 +78,7 @@ export const Session = ({ trainingId }) => {
 
   const cookies = new Cookies();
   const token = cookies.get("Bearer");
-
+  const role =cookies.get("role")
   const fetchAllSessionsMentor = async () => {
     try {
       const getSessionsResponse = await axiosInstance.get(`/training/getSessions/${trainingId}`, {
@@ -112,9 +112,10 @@ export const Session = ({ trainingId }) => {
           <img src={nosession} alt="not found" />
         </div>
       )}
-      <div className="createTrainingSticky" onClick={handleShowPopupSession}>
+      {role!=="User"&&<div className="createTrainingSticky" onClick={handleShowPopupSession}>
         <img src={addTrainingIcon} alt="not found" />
-      </div>
+      </div>}
+      
       {showPopupSession && (
         <PopupSession
           handleShowPopupSession={handleShowPopupSession}

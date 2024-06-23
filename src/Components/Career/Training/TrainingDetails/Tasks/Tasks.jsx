@@ -75,6 +75,7 @@ export const Tasks = ({trainingId}) => {
    
 const cookies = new Cookies();
 const token = cookies.get("Bearer");
+const role =cookies.get("role")
 const fetchTasks = async () => {
    try {
       const response = await axiosInstance.get(`/task/${trainingId}`,{
@@ -111,10 +112,10 @@ useEffect(() => {
                <img src={notasks} alt="not found" />
             </div>
          )}
-
-         <div className="createTrainingSticky" onClick={() => setShowPopupTasks(!showPopupTasks)} >
+          {role!=="User"&&<div className="createTrainingSticky" onClick={() => setShowPopupTasks(!showPopupTasks)} >
             <img src={upload} alt="not found" />
-         </div>
+         </div>}
+         
          {showPopupTasks && <Popup fetchTasks={fetchTasks} handleShowpopupTask={() => setShowPopupTasks(false)} handleAddMaterial={handleAddMaterial} handleUpdateMaterial={handleUpdateMaterial} taskToEdit={selectedTask} trainingId={trainingId} />}
          {showPopupTasks && <div className="overlay"></div>}
 

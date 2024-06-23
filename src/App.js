@@ -31,6 +31,7 @@ import Schedules from './Components/Schedule/main-schedule';
 import { SystemAdminProfile } from './Components/Profiles/SystemAdminProfile/SystemAdminProfile';
 import PreventGoBack from './Components/PreventGoback';
 import { Logout } from './Components/Logout/Logout';
+import { MentorSection } from './Components/Mentor-section/MentorSection';
 
 
 function App() {
@@ -69,6 +70,7 @@ function App() {
          <Route path='/Schedule' element={<Schedules/>}/>
          <Route path='/profileSystemAdmin' element={<SystemAdminProfile/>}/>
          <Route path='/logout' element={<Logout/>}/>
+         <Route path='/mentorSection' element={<MentorSection/>}/>
       </Route>
       </Routes>
     </Router>

@@ -27,9 +27,10 @@ export const Training = () => {
 
   const cookies = new Cookies();
   const token = cookies.get("Bearer");
-
+  const role =cookies.get("role")
   // const[count,setcount]=useState()
   console.log(trainings);
+
 
   const fetchTrainings = async () => {
     try {
@@ -56,8 +57,40 @@ export const Training = () => {
     }
   };
 
+  const fetchTrainingsUser = async () => {
+    try {
+      const response = await axiosInstance.get('/training/', {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      let trainingData = response.data.data.trainigs ? Object.values(response.data.data.trainigs) : [];
+
+      if (trainingData.length > 0) {
+        trainingData = trainingData.slice(0, -1);
+        setTrainings(trainingData);
+        setFilteredTrainings(trainingData);
+      }
+
+      setIsDataLoaded(true);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+      setIsLoading(false);
+    }
+  };
+
+
+  //////////////////////////
    useEffect(() => {
-    fetchTrainings();
+    if(role==="Mentor"){
+      fetchTrainings();
+    }
+    else{
+      fetchTrainingsUser()
+    }
   }, [token]);
 
   
@@ -168,9 +201,10 @@ export const Training = () => {
                 )}
               </>
             )}
-            <div className="createTrainingSticky" onClick={handleShowPopupTraining}>
+            {role!=="User"&&<div className="createTrainingSticky" onClick={handleShowPopupTraining}>
               <img src={addTrainingIcon} alt="not found" />
-            </div>
+            </div>}
+            
             {ShowPopupTraining && <PopupTraining handleShowPopupTraining={handleShowPopupTraining} />}
             {ShowPopupTraining && <div className="overlay"></div>}
           </div>
